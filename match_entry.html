@@ -1,0 +1,33 @@
+<html>
+<body>
+<h1>Data Entry Form</h1>
+<p>
+Enter data here:
+</p>
+
+<form action="match_entry.php" method="post">
+Match number:<input type="number" name="match"> </br>
+Team number:<input type="number" name="team"> </br>
+</br>
+Autonomous:</br>
+Shot high:<input type="radio" name="shot_auton" value="high"></br>
+Shot low:<input type="radio" name="shot_auton" value="low"></br>
+Didn't shoot (Just making sure you're awake!):<input type="radio" name="shot_auton" value="slept"></br>
+Hot goal:<input type="checkbox" name="hot" value="hot"></br>
+Drove forward:<input type="checkbox" name="drove_auton" value="drove"></br>
+</br>
+Main game:</br>
+Passes Over Bar:<input type="number" name="bar_toss"></br>
+Catches From Bar:<input type="number" name="bar_catch"></br>
+Passes (don't include the bar):<input type="number" name="passes"></br>
+Recieved:<input type="number" name="recieved"></br>
+High goals:<input type="number" name="goal_high"></br>
+Low goals:<input type="number" name="goal_low"></br>
+Estimated points defended:<input type="number" name="defense"></br>
+Balls Killed:<input type="number" name="killed">
+Tags (separate by commas):<input type="text" name="tags">
+Notes:<input type="textarea" rows="10" cols="60" name="notes"></br>
+<input type="submit">
+</form>
+</body>
+</html>
