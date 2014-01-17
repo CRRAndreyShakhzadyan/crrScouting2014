@@ -1,8 +1,9 @@
 <?php
 // define variables and set to default values
-$match = $team = $barToss = $barCatch = $passes = $recieve = $goalHigh = $goalLow = $defense = $killed= 0;
-$tags = $notes = "";
-$high = $low = $hot = $drove = False;
+$match = $team = $barToss = $barCatch = $passes = $recieve = $goalHigh = 
+$goalLow = $defense = $killed = $fouls = $tech_fouls = 0;
+$tags = $notes = $tech_problems = "";
+$high = $low = $hot = $drove = $won = False;
 
 //This entire thing just assigns the form data to these variables
 if ($_SERVER["REQUEST_METHOD"] == "POST"){ 
@@ -19,6 +20,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
 	$goalHigh = $_POST["goal_high"];
 	$goalLow = $_POST["goal_low"];
 	$defense = $_POST["defense"];
+	$fouls = $_POST["fouls"];
+	$tech_fouls = $_POST["tech_fouls"];
+	$tech_problems = $_POST["tech_problems"];
+	$won = (strcmp($_POST["shot_auton"],"high")==0);
 	$killed = $_POST["killed"];
 	$notes = $_POST["notes"];
 	$tags = $_POST["tags"];
@@ -31,7 +36,8 @@ if (mysqli_connect_errno()){
 	echo "Failed to connect to MySQL: " . mysqli_connect_error();
 }
 
-mysqli_query($con,"INSERT INTO `match_data`(`match`, `team`, `high_auton`, `low_auton`, `hot_auton`, `drove_auton`,`bar_toss`, `bar_catch`, `passes`, `recieved`,`goal_high`, `goal_low`,`defense`, `killed`, `notes`, `tags`,) VALUES (".$match.",".$team.",".$high.",".$low.",".$hot.",".$drove.",".$barToss.",".$barCatch.",".$passes.",".$recive.",".$defense.",`".$notes."`,`".$tags."`)");//The good stuff, pass off to mysql
+mysqli_query($con,"INSERT INTO `match_data`(`match`, `team`, `high_auton`, `low_auton`, `hot_auton`, `drove_auton`,`bar_toss`, `bar_catch`, `passes`, `recieved`,`goal_high`, `goal_low`,`defense`, `fouls`, `tech_fouls`, `tech_problems`, `win/lose`, `notes`, `tags`, `competition`) VALUES 
+(".$match.",".$team.",".$high.",".$low.",".$hot.",".$drove.",".$barToss.",".$barCatch.",".$passes.",".$recive.",".$defense.",`".$fouls.",`".$tech_fouls.",`".$tech_problems.",`".$won.",`".$notes."`,`".$tags."`)");//The good stuff, pass off to mysql
 
 //Tidy up
 mysqli_close($con);
