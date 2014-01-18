@@ -1,28 +1,32 @@
 <html>
 <head>
+<title>Code Red Scouting</title>
 
-<link rel = "stylesheet" href = "match_entry.css" type = "text/css">
+<link rel= "stylesheet" href="match_entry.css" type="text/css">
 
 </head>
 <body>
+<img src="Scouting4.png" alt="Scouting4.png" width="1000" height="30">
 <h1>Data Entry Form</h1>
-<div class = "formp">
+<div class= "formp1">
+<div class= "formp2">	
 <p>
-Enter data here:
+<h3>Enter data here:</h3>
 </p>
 
 <form action="match_entry.php" method="post">
 Match number:<input type="number" name="match"> </br>
 Team number:<input type="number" name="team"> </br>
 </br>
-Autonomous:</br>
+<h3>Autonomous:</h3>
+
 Shot high:<input type="radio" name="shot_auton" value="high"></br>
 Shot low:<input type="radio" name="shot_auton" value="low"></br>
 Didn't shoot (Just making sure you're awake!):<input type="radio" name="shot_auton" value="slept"></br>
-Hot goal:<input type="checkbox" name="hot"></br>
-Drove forward:<input type="checkbox" name="drove_auton"></br>
+Hot goal:<input type="checkbox" name="hot" value="hot"></br>
+Drove forward:<input type="checkbox" name="drove_auton" value="drove"></br>
 </br>
-Main game:</br>
+<h3>Main game:</br></h3>
 Passes Over Bar:<input type="number" name="bar_toss"></br>
 Catches From Bar:<input type="number" name="bar_catch"></br>
 Passes (don't include the bar):<input type="number" name="passes"></br>
@@ -30,16 +34,13 @@ Recieved:<input type="number" name="recieved"></br>
 High goals:<input type="number" name="goal_high"></br>
 Low goals:<input type="number" name="goal_low"></br>
 Estimated points defended:<input type="number" name="defense"></br>
-Fouls:<input type="number" name="fouls"></br>
-Technical Fouls:<input type="number" name="tech_fouls"></br>
-Problems:<input type="text" name="tech_problems"></br>
-Won:<input type="radio" name="win" value="won"></br>
-Lost:<input type="radio" name="win" value="lost"></br>
-Balls Killed:<input type="number" name="killed"><br>
-Tags (separate by commas):<input type="text" name="tags"></br>
+Balls Killed:<input type="number" name="killed">
+Tags (separate by commas):<input type="text" name="tags">
 Notes:<input type="textarea" rows="10" cols="60" name="notes"></br>
-Competition:<input type="text" name="competition" value="FLR"></br>
 <input type="submit">
 </form>
+</div>
+</div>
+
 </body>
 </html>
