@@ -38,7 +38,21 @@ if (mysqli_connect_errno()){
 	echo "Failed to connect to MySQL: " . mysqli_connect_error();
 }
 
-//Gather the actual data
+//Gather the actual data FROM ROBOTS                                   <-------------------ROBOTS
+//TODO: ? restrict to only the needed values
+$result=mysqli_query($con,"SELECT * FROM robot_data");
+
+//Here we get ready to print out a table
+$print="<table><tr> <td>team</td> <td>info</td></tr>";
+echo $print;
+
+//Gos through every row and places information in the table
+while($row = mysqli_fetch_array($result)){
+	//TODO:Find out what columns should go here
+}
+
+
+//Gather the actual data FOR MATCHES                         <-------------------------Matches
 //TODO: ? restrict to only the needed values
 $result=mysqli_query($con,"SELECT * FROM match_data");
 
@@ -46,7 +60,7 @@ $result=mysqli_query($con,"SELECT * FROM match_data");
 $print="<table>
 <tr> <td>match</td> <td>team</td>";
 
-for($i=1;$i<sizeof($heads) && $i<sizeof($heads);$i++){
+for($i=1;$i<sizeof($heads) && $i<sizeof($cols);$i++){
 	if($cols[i])
 		$print=$print.$heads[i];
 }
@@ -65,9 +79,40 @@ while($row = mysqli_fetch_array($result)){
 	if($row['drove_auton']==1)
 		$auton=$auton." drove";
 	
-	
-	
-	echo "<tr> <td>".$row['match']."</td> <td>".$row['team']."</td> <td>".$auton."</td> <td>".$row['bar_toss']."</td> <td>".$row['bar_catch']."</td> <td>".$row['passes']."</td> <td>".$row['recieved']."</td> <td>".$row['goal_high']."</td> <td>".$row['goal_low']."</td> <td>".$row['defense']."</td> <td>".$row['fouls']."</td> <td>".$row['tech_fouls']."</td> <td>".$row['tech_problems']."</td> <td>".$row['win/lose']."</td> <td>".$row['notes']."</td> <td>".$row['tags']."</td> </tr>";
+	//This masssive section of ifs adds on all of the columns that we are actually tracking
+	$print="<tr> <td>".$row['match']."</td> <td>".$row['team']."</td>";
+	if(cols[0]){
+		$print=$print."<td>".$auton."</td>"
+	}if(cols[1]){
+		$print=$print."<td>".$row['bar_toss']."</td>"
+	}if(cols[2]){
+		$print=$print."<td>".$row['bar_catch']."</td>"
+	}if(cols[3]){
+		$print=$print."<td>".$row['passes']."</td>"
+	}if(cols[4]){
+		$print=$print."<td>".$row['recieved']."</td>"
+	}if(cols[5]){
+		$print=$print."<td>".$row['goal_high']."</td>"
+	}if(cols[6]){
+		$print=$print."<td>".$row['goal_low']."</td>"
+	}if(cols[7]){
+		$print=$print."<td>".$row['defense']."</td>"
+	}if(cols[8]){
+		$print=$print."<td>".$row['fouls']."</td>"
+	}if(cols[9]){
+		$print=$print."<td>".$row['tech_fouls']."</td>"
+	}if(cols[10]){
+		$print=$print."<td>".$row['tech_problems']."</td>"
+	}if(cols[11]){
+		$print=$print."<td>".$row['win/lose']."</td>"
+	}if(cols[12]){
+		$print=$print."<td>".$row['notes']."</td>"
+	}if(cols[13]){
+		$print=$print."<td>".$row['tags']."</td>"
+	}
+	$print=$print."</tr>"
+		
+	echo $print;
 }
 echo "</table>"
 
