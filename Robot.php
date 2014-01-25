@@ -29,25 +29,7 @@ class Robot{
 		
 	}
 	
-	public function giveBall(){ //gives the ball to the robots
-		$hasBall = True;
-	}
-	
-	public function setTask($myTask){//valid tasks are "defend","shoot", and "pass"
-		$task=$myTtask
-	}
-	
-	public function recieve(){//receives a ball, returns 1=recieved,2=recieved over bar
-		if(rand(0,1)<=$catchProb){
-			$hasBall = True;
-			if(rand(0,1)<=$catchProb){//smaller probability for passes over bar
-				return 2;
-			}else{
-				return 1;
-			}
-		}
-		return 0;
-	}
+
 	
 	public function pass(){//attempts to pass and returns whether the attempt was successful
 		if(rand(0,1)<=$scoreProb){ //TODO?: use a better random number generator?
@@ -59,13 +41,7 @@ class Robot{
 		return False;
 	}
 	
-	public function score(){//attempts to score the ball
-		if(rand(0,1)<=$scoreProb){
-			hasBall=False;
-			return True;
-		}
-		return False;
-	}
+	
 	
 	{//getters
 	public function getTeam(){
