@@ -55,6 +55,7 @@ class Robot{
 	public function tick(){
 		if($taskTimeLeft!=-1){
 			$taskTimeLeft-=TICK_TIME;
+			return false;
 		}
 		if($taskTimeLeft<=0){
 			if(strcmp($task,"pass")==0)
