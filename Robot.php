@@ -63,9 +63,9 @@ class Robot{
 			if(strcmp($task,"shoot")==0)
 				return pass();
 			if(strcmp($task,"defend")==0)
-				return floor(rand(0,1)*defense*TICK_TIME/140);
+				return true;//TODO?:add some random chance of returning true?
 		}
-			
+		return false;
 	}
 	
 	{//getters
@@ -75,6 +75,10 @@ class Robot{
 	
 	public function getDefense(){
 		return $avgDefense;
+	}
+	
+	public function getDefended(){
+		return floor(rand(0,1)*defense*TICK_TIME/140);
 	}
 	
 	public function getShoot(){
