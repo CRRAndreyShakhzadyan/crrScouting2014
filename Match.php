@@ -123,5 +123,13 @@ class Match
 		}
 		return 0;
 	}
+	
+	public function m_tick($tick_duration)
+	{
+		$timeleft -= $tick_duration;
+		Robot->tick();
+		Alliance-tick();
+	{
+	
 		
 	}
