@@ -113,10 +113,8 @@ class Robot{
 		return $autonDrive;
 	}
 	
-	public function getTaskAtTime($time){
-		for($i=0;i<sizeof($taskAtTime);i++){
-			
-		}
+	public function getTask(){
+		return $task
 	}
 	}
 }
