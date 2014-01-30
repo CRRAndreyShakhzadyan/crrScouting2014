@@ -22,31 +22,6 @@ class Alliance{
 		$c->reset();
 	}
 	
-	//Simulation Methods
-	public function score($high){//scores the ball, whether the ball was scored high
-		if($high){
-			$score+=(10+$ballHeat);
-		}else{
-			$score+=(1+$ballHeat);
-		}
-	}
-	
-	public function recieve(){//receives a ball, returns 1=recieved,2=recieved over bar
-		if(rand(0,1)<=$catchProb){
-			$hasBall = True;
-			if(rand(0,1)<=$catchProb){//smaller probability for passes over bar
-				return 2;
-			}else{
-				return 1;
-			}
-		}
-		return 0;
-	}
-	
-	public function setTask($myTask){//valid tasks are "defend","shoot", and "pass"
-		$task=$myTtask
-	}
-	
 	//passes the ball to a random robot params: 
 	//$not: what robot just passed the ball and therefore can't recieve
 	/*-IMPORTANT- This method doesn't do anything to remove the ball from
@@ -68,7 +43,7 @@ class Alliance{
 		if(!$passedOver && $robot1->getPassOver() && $robot2->getCatchOver()){
 			$passedOver=True;
 			$ballHeat+=10;
-			if(rand(0,.9999)<$robot2->getCatchProb())
+			if(rand(0,1)<$robot2->getCatchProb())
 				$ballHeat+=10;
 		} else {
 			pass($robot1);
@@ -76,7 +51,9 @@ class Alliance{
 	}
 	
 	//calls robot->tick() methods and does the other things in this decade
-	public function tick(){
+	//defended should be a reference
+	public function tick($defended){
+		$d=0;
 		if($robotA->tick()){
 			$task=$robotA->getTask()
 			if(strcmp($task,"pass")==0){
@@ -84,9 +61,30 @@ class Alliance{
 			}else if(strcmp($task,"shoot")==0){
 				score+=($robotA->getShoot()>=2 ? 10:1)+$ballHeat;
 			}else if(strcmp($task,"defend")==0){
-				
+				$d+=$robotA->getDefended();
 			}
 		}
+		if($robotB->tick()){
+			$task=$robotB->getTask()
+			if(strcmp($task,"pass")==0){
+				passOverBar($robotB,$robotC);//TODO?:make this randomized
+			}else if(strcmp($task,"shoot")==0){
+				score+=($robotB->getShoot()>=2 ? 10:1)+$ballHeat;
+			}else if(strcmp($task,"defend")==0){
+				$d+=$robotA->getDefended();
+			}
+		}
+		if($robotC->tick()){
+			$task=$robotC->getTask()
+			if(strcmp($task,"pass")==0){
+				passOverBar($robotC,$robotA);//TODO?:make this randomized
+			}else if(strcmp($task,"shoot")==0){
+				score+=($robotC->getShoot()>=2 ? 10:1)+$ballHeat;
+			}else if(strcmp($task,"defend")==0){
+				$d+=$robotA->getDefended();
+			}
+		}
+		$defended=$d;
 	}
 	
 	//Getter methods
