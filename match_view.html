@@ -1,22 +1,51 @@
 <html>
+<head>
+<title>Robot Scouting Results</title>
+
+
+</head>
+<link href="match_entry.css" type="text/css" rel = "stylesheet">
+<div class = "formb3">
 <body>
+<a href="homepage.html"><img src="Scouting4.png" alt="Scouting4.png" width="1000" height="30"></a>
+<h1>Robot Data Search</h1>
+</div>
+<div class = "formb0">
+<div class = "formb1">
+<div class = "formb2">
 <form action="match_view.php" method="post">
-Team number:<input type="number" name="team"></br>
-Autonomous: <input type="checkbox" name="auton">
-Passes Over Bar:<input type="checkbox" name="bar_toss">
-Catches From Bar:<input type="checkbox" name="bar_catch">
-Passes:<input type="checkbox" name="passes">
-Recieved:<input type="checkbox" name="recieved">
-High goals:<input type="checkbox" name="goal_high">
-Low goals:<input type="checkbox" name="goal_low">
-Estimated points defended:<input type="checkbox" name="defense">
-Fouls:<input type="checkbox" name="fouls"></br>
-Technical Fouls:<input type="checkbox" name="tech_fouls"></br>
-Problems:<input type="checkbox" name="tech_problems"></br>
-Won/lost:<input type="checkbox" name="win"></br>
-Tags:<input type="checkbox" name="tags">
-Notes:<input type="chexbox" name="notes">
-Notes:<input type="chexbox" name="competition">
+Team number<br><input type="number" name="team">
+<input type = "submit" name = "searchByName">
+</form>
+<form action="match_view.php" method="post">
+<table border ="0" align="center">
+<tr>
+<h2>Or Select All That Apply:</h2>
+</tr><tr>
+<td>Autonomous:<td><input type=	"checkbox" name="auton" ></td></td>
+<td>Passes Over Truss:<td><input type="checkbox" name="truss_toss" ></td></td>
+
+</tr>
+<tr>
+<td>Catches:<td><input type="checkbox" name="catches" ></td></td>
+<td>Passes:<td><input type="checkbox" name="passes" ></td></td>
+<td>Received:<td><input type="checkbox" name="received" ></td></td>
+</tr>
+<tr><br>
+<td>High goals:<td><input type="checkbox" name="goal_high" ></td></td>
+<td>Low goals:<td><input type="checkbox" name="goal_low" ></td></td>
+<td>Points defended:<td><input type="checkbox" name="defense" ></td></td>
+<br></tr><tr>	
+<td>Balls Killed:<td><input type="checkbox" name="killed" ></td></td>
+<td>Tags:<td><input type="checkbox" name="tags" ></td></td>
+<td>Notes:<td><input type="checkbox" rows="10" cols="60" name="notes"></td></td>
+</tr>
+</table>
+<br>		
+<input type = "submit" name = "searchByTags">
+</div>
+</div>
+</div>
 </form>
 </body>
 </html>

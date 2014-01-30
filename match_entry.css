@@ -1,33 +1,80 @@
 h1
 {
 	text-align: center;
+	font-family:"Arial", Helvetica, sans-serif;
+	width:auto;
+	margin-left: 10%;
+	margin-right: 10%;
+}
+
+
+h2
+{
+	text-align: center;
 	width:auto;
 	margin-left: 40%;
 	margin-right: 40%;
+	font-size:18;
+}
+
+h3
+{
+	text-align: center;
+	width:auto;
+	margin-left: 10%;
+	margin-right: 10%;
+	font-size:28;
+
+}
+
+input[type=text],input[type=number]
+{
+	background-color:#EEEEEE;
+	border: solid 1px #AD0000;
+	border-radius:5px;
+}
+
+textarea
+{
+	background-color:#EEEEEE;
+	border: solid 1px #AD0000;
+	border-radius:5px;
 }
 
 body
 {
-	background-image: url("crrTexture.bmp");
+	background-color: #AD0000;
+	font-family:"Arial", Helvetica, sans-serif;
+	color: #EEEEEE;
 }
 
 input
 {
 	margin:2px;
 }
+
 img
 {
 	width: 639;
 	height: 200;
-	margin-left: 30%;
-	margin-right: 30%;
 }
+
+/*.formp0
+{
+	text-align: left;
+	border-radius: 3px;
+	width: auto;
+	background-color: #B51E10;
+	padding:10px;
+	margin-left: 10%;
+	margin-right: 10%;
+}*/
+
 .formp1
 {
 	text-align: left;
-	border-radius: 30px;
 	width: auto;
-	background-color: #85001B;
+	background-color: #0000FF ;
 	padding:10px;
 	margin-left: 20%;
 	margin-right: 20%;
@@ -37,13 +84,86 @@ img
 .formp2
 {
 	
-	background-image: url("crrTexturedark.png");
+	background-image: url("crrTexturelight.bmp");
 	padding:10px;
-	border-radius: 20px;
+	background-color: #000000 ;
 	margin-left: 10%;
 	margin-right: 10%;
 	
 	
 }
 
+.formp3
+{
+	font-family:Arial, Helvetica, sans-serif;
+}
 
+a:link
+{
+	font-size: 32;
+	color:#EEEEEE;
+	text-decoration:none;
+}
+
+a:visited
+{
+	font-size: 32;
+	color:#EEEEEE;
+	text-decoration:none;
+}
+
+a:hover
+{
+	
+	color:#CCCCCC;
+	width:99px;
+	text-decoration:none;
+	
+}
+
+a:active
+{
+	color:#BBBBBB;
+	
+}
+
+
+.formb0
+{
+	text-align: center;
+	border-radius: 3px;
+	width: auto;
+	background-color: #700000;
+	padding:10px;
+	margin-left: 10%;
+	margin-right: 10%;
+}
+
+.formb1
+{
+	text-align: center;
+	font-family:"Arial", Helvetica, sans-serif;
+	border-radius: 3px;
+	width: auto;
+	background-color: #880000;
+	padding:10px;
+	margin-left: 10%;
+	margin-right: 10%;
+}
+
+.formb2
+{
+	
+	background-image: url("crrTexturelight.bmp");
+	padding:10px;
+	border-radius: 3px;
+	margin-left: 10%;
+	margin-right: 10%;
+	
+	
+}
+
+.formb3
+{
+	font-family:"Arial", Helvetica, sans-serif;
+}
