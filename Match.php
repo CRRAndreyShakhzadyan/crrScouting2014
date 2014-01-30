@@ -2,16 +2,16 @@
 
 class Match
 {
-	private $a1 = new Alliance();
-	private $a2 = new Alliance();
+	private $a = new Alliance();
+	private $a = new Alliance();
 		
 	private $timeLeft = 140;
 	
 	
-	public function _construct(Alliance a, Alliance $b)
+	public function _construct(Alliance $a1, Alliance $b1)
 	{
-		this->$a1=$a;
-		this->$a2=$b;
+		this->$a=$a1;
+		this->$b=$b1;
 		
 	}
 
@@ -77,7 +77,7 @@ class Match
 		$timeleft -= $tick_duration;
 		Robot->tick();
 		Alliance-tick();
-	{
+	}
 	
 		
 	}
