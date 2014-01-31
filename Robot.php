@@ -31,9 +31,9 @@ class Robot{
 		
 	}
 
-	public function pass(){//attempts to pass and returns whether the attempt was successful
-		if(rand(0,1)<=$scoreProb){ //TODO?: use a better random number generator?
-			if($hasBall){
+	public function pass($defense){//attempts to pass and returns whether the attempt was successful
+		if(rand(0,1)<=$scoreProb-$defense){ //TODO?: use a better random number generator?
+			if($hasBall){//TODO?:change above, keep better track?
 				$hasBall = False;
 				return True;
 			}
@@ -52,16 +52,16 @@ class Robot{
 			$taskTimeLeft=-1;
 	}
 	
-	public function tick(){
+	public function tick($defended){
 		if($taskTimeLeft!=-1){
 			$taskTimeLeft-=TICK_TIME;
 			return false;
 		}
 		if($taskTimeLeft<=0){
 			if(strcmp($task,"pass")==0)
-				return pass();
+				return pass($defended);
 			if(strcmp($task,"shoot")==0)
-				return pass();
+				return pass($defended);
 			if(strcmp($task,"defend")==0)
 				return true;//TODO?:add some random chance of returning true?
 		}
@@ -78,7 +78,7 @@ class Robot{
 	}
 	
 	public function getDefended(){
-		return floor(rand(0,1)*defense*TICK_TIME/140);
+		return floor(rand(0,$avgDefense*TICK_TIME/140)*140/(TICK_TIME*$avgDefense));
 	}
 	
 	public function getShoot(){
