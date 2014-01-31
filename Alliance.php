@@ -50,41 +50,60 @@ class Alliance{
 		}
 	}
 	
+	public function playAutonomous(){
+		if($a->getAutonDrive())
+			$score+=5;
+		if($b->getAutonDrive())
+			$score+=5;
+		if($c->getAutonDrive())
+			$score+=5;
+			
+		if($a->score())
+			$score+=$a->$getAutonShoot();
+		if($b->score())
+			$score+=$b->$getAutonShoot();
+		if($c->score())
+			$score+=$c->$getAutonShoot();
+	}
+	
+	public function getTickDefense(){
+		if(strcmp($robotA->getTask(),"defend")==0){
+			return $robotA->getDefended();
+		}
+		if(strcmp($robotB->getTask(),"defend")==0){
+			return $robotB->getDefended();
+		}
+		if(strcmp($robotC->getTask(),"defend")==0){
+			return $robotC->getDefended();
+		}
+	}
+	
 	//calls robot->tick() methods and does the other things in this decade
 	//defended should be a reference
 	public function tick($defended){
-		$d=0;
-		if($robotA->tick()){
+		if($robotA->tick($defended)){
 			$task=$robotA->getTask()
 			if(strcmp($task,"pass")==0){
 				passOverBar($robotA,$robotB);//TODO?:make this randomized
 			}else if(strcmp($task,"shoot")==0){
 				score+=($robotA->getShoot()>=2 ? 10:1)+$ballHeat;
-			}else if(strcmp($task,"defend")==0){
-				$d+=$robotA->getDefended();
 			}
 		}
-		if($robotB->tick()){
+		if($robotB->tick($defended)){
 			$task=$robotB->getTask()
 			if(strcmp($task,"pass")==0){
 				passOverBar($robotB,$robotC);//TODO?:make this randomized
 			}else if(strcmp($task,"shoot")==0){
 				score+=($robotB->getShoot()>=2 ? 10:1)+$ballHeat;
-			}else if(strcmp($task,"defend")==0){
-				$d+=$robotA->getDefended();
 			}
 		}
-		if($robotC->tick()){
+		if($robotC->tick($defended)){
 			$task=$robotC->getTask()
 			if(strcmp($task,"pass")==0){
 				passOverBar($robotC,$robotA);//TODO?:make this randomized
 			}else if(strcmp($task,"shoot")==0){
 				score+=($robotC->getShoot()>=2 ? 10:1)+$ballHeat;
-			}else if(strcmp($task,"defend")==0){
-				$d+=$robotA->getDefended();
 			}
-		}
-		$defended=$d;
 	}
 	
 	//Getter methods
