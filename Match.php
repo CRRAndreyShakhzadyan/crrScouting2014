@@ -1,10 +1,12 @@
 <?php
 
 class Match
-{
+{	
+	const TICK_TIME=5;
 	private $a = new Alliance();
 	private $a = new Alliance();
-		
+	
+	private $maxDefense;//TODO!:move this to whatever new managment class we make and have it find the max average defense or the max defense	
 	private $timeLeft = 140;
 	
 	
@@ -18,12 +20,23 @@ class Match
 	
 	
 	public function playGame(Alliance $other){
-		if($a->getAutonDrive())
+		$a->playAutonomous();
+		$b->playAutonomous();
+		
+		while($timeLeft>0){
+			$aDefend=$a->getDefense();
+			$bDefend=$b->getDefense();
+			$a->tick($bDefend);//swap them so that $a plays against the $b defense
+			$b->tick($aDefend);
+		}
+		
+		//This massive block of code is just the old alliance playGame() method
+		/*if($a->getAutonDrive())
 			$score+=5;
 		if($b->getAutonDrive())
 			$score+=5;
 		if($c->getAutonDrive())
-			$score+=5
+			$score+=5;
 			
 		if($a->score())
 			$score+=$getAutonShoot();
@@ -31,7 +44,6 @@ class Match
 			$score+=$getAutonShoot();
 		if($c->score())
 			$score+=$getAutonShoot();
-		
 		while($a->hasBall() || $b->hasBall() || $c->hasBall()){
 			if($a->hasBall()){
 				$a->score();
@@ -55,7 +67,7 @@ class Match
 			$ballOwner=$c;
 		}
 		public function giveBall(){ //gives the ball to the robots
-		$hasBall = True;
+		$hasBall = True;*/
 	}
 	
 	
