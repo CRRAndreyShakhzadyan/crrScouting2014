@@ -38,7 +38,7 @@ if (mysqli_connect_errno()){
 	echo "Failed to connect to MySQL: " . mysqli_connect_error();
 }
 
-//Gather the actual data FROM ROBOTS                                   <-------------------ROBOTS
+//Gather the actual data FROM ROBOTS                                  
 //TODO: ? restrict to only the needed values
 $result=mysqli_query($con,"SELECT * FROM robot_data");
 
