@@ -1,25 +1,29 @@
-h1
+/* Regular(lame) html tags*/
+html
 {
 	text-align: center;
 	font-family:"Arial", Helvetica, sans-serif;
+	
+	color: #EEEEEE;
+
+}	
+
+hr.style-four {
+    height: 12px;
+    border: 0;
+    box-shadow: inset 0 12px 12px -12px rgba(0,0,0,0.5);
+}
+h1
+{
+	
 	width:auto;
 	margin-left: 10%;
 	margin-right: 10%;
 }
 
 
-h2
-{
-	text-align: center;
-	width:auto;
-	margin-left: 40%;
-	margin-right: 40%;
-	font-size:18;
-}
-
 h3
 {
-	text-align: center;
 	width:auto;
 	margin-left: 10%;
 	margin-right: 10%;
@@ -44,8 +48,6 @@ textarea
 body
 {
 	background-color: #AD0000;
-	font-family:"Arial", Helvetica, sans-serif;
-	color: #EEEEEE;
 }
 
 input
@@ -57,45 +59,6 @@ img
 {
 	width: 639;
 	height: 200;
-}
-
-/*.formp0
-{
-	text-align: left;
-	border-radius: 3px;
-	width: auto;
-	background-color: #B51E10;
-	padding:10px;
-	margin-left: 10%;
-	margin-right: 10%;
-}*/
-
-.formp1
-{
-	text-align: left;
-	width: auto;
-	background-color: #0000FF ;
-	padding:10px;
-	margin-left: 20%;
-	margin-right: 20%;
-	
-}
-
-.formp2
-{
-	
-	background-image: url("../assets/crrTexturelight.bmp");
-	padding:10px;
-	background-color: #000000 ;
-	margin-left: 10%;
-	margin-right: 10%;
-	
-	
-}
-
-.formp3
-{
-	font-family:Arial, Helvetica, sans-serif;
 }
 
 a:link
@@ -127,7 +90,45 @@ a:active
 	
 }
 
+/* Glorious and mighty formp classes (protip: the commented out ones suck, don't use them)*/
+/*.formp0
+{
+	text-align: left;
+	border-radius: 3px;
+	width: auto;
+	background-color: #B51E10;
+	padding:10px;
+	margin-left: 10%;
+	margin-right: 10%;
+}*/
 
+
+.formp1
+{
+	text-align: left;
+	width: auto;
+	background-color: #0000FF ;
+	padding:10px;
+	margin-left: 20%;
+	margin-right: 20%;
+	
+}
+
+/* .formp2
+{
+	
+	background-image: url("../assets/crrTexturelight.bmp");
+	padding:10px;
+	background-color: #000000 ;
+	margin-left: 10%;
+	margin-right: 10%;
+	
+	
+} */
+
+
+
+/* Glorious and mighty formb classes (needs cleaning up(real bad)) */
 .formb0
 {
 	text-align: center;
@@ -145,7 +146,6 @@ a:active
 	font-family:"Arial", Helvetica, sans-serif;
 	border-radius: 3px;
 	width: auto;
-	height: 90%;
 	background-color: #880000;
 	padding:10px;
 	margin-left: 10%;
