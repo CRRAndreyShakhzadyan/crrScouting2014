@@ -5,6 +5,11 @@ $goalLow = $defense = $killed = $fouls = $tech_fouls = 0;
 $tags = $notes = $tech_problems = "";
 $high = $low = $noshot = $hot = $drove = $won = False;
 
+
+if(strcmp($tags,"#econimal")== 0)
+{
+	echo '<iframe width="640" height="360" src="//www.youtube.com/embed/h7yfaSTSxBQ?feature=player_detailpage" frameborder="0" allowfullscreen></iframe>';
+}
 //This entire thing just assigns the form data to these variables
 if ($_SERVER["REQUEST_METHOD"] == "POST"){ 
 	$match = $_POST["match"];
@@ -42,6 +47,5 @@ mysqli_query($con,"INSERT INTO `match_data`(`match`, `team`, `high_auton`, `low_
 
 //Tidy up
 mysqli_close($con);
-
 echo("Form submitted successfully. If the back button infuriates you feel free to press <a href='http://localhost/match_entry.html'>here.</a>");
 ?>
