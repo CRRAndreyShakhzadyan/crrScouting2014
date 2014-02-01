@@ -6,10 +6,7 @@ $tags = $notes = $tech_problems = "";
 $high = $low = $noshot = $hot = $drove = $won = False;
 
 
-if(strcmp($tags,"#econimal")== 0)
-{
-	echo '<iframe width="640" height="360" src="//www.youtube.com/embed/h7yfaSTSxBQ?feature=player_detailpage" frameborder="0" allowfullscreen></iframe>';
-}
+
 //This entire thing just assigns the form data to these variables
 if ($_SERVER["REQUEST_METHOD"] == "POST"){ 
 	$match = $_POST["match"];
@@ -26,15 +23,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
 	$goalHigh = $_POST["goal_high"];
 	$goalLow = $_POST["goal_low"];
 	$defense = $_POST["defense"];
-	$fouls = $_POST["fouls"];
-	$tech_fouls = $_POST["tech_fouls"];
-	$tech_problems = $_POST["tech_problems"];
-	$won = isset($_POST['won'];
+	// $fouls = $_POST["fouls"];
+	// $tech_fouls = $_POST["tech_fouls"];
+	// $tech_problems = $_POST["tech_problems"];
+	$won = isset($_POST['won']);
 	$killed = $_POST["killed"];
 	$notes = $_POST["notes"];
 	$tags = $_POST["tags"];
 }
-
+//shh not important move along shh
+if(strcmp($tags,"#econimal")== 0)
+{
+	echo '<iframe width="640" height="360" src="//www.youtube.com/embed/h7yfaSTSxBQ?feature=player_detailpage" frameborder="0" allowfullscreen></iframe>';
+}
 $con=mysqli_connect("localhost","root","","scouting_database");
 
 //Check connection
