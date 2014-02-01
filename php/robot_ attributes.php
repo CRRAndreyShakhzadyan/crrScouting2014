@@ -28,7 +28,7 @@ if (mysqli_connect_errno()){
 	echo "Failed to connect to MySQL: " . mysqli_connect_error();
 }
 
-mysqli_query($con,"INSERT INTO `match_data`(`shoot_time`, `goal_rate`, `pickup`, `catcher`, `truss_catch`, `block_cap`, `drive_type`,`drive_speed`, `drive_push`, `pass_method`, `pass_comp`,`block_mech`) VALUES 
+mysqli_query($con,"INSERT INTO `robot_attributes`(`shoot_time`, `goal_rate`, `pickup`, `catcher`, `truss_catch`, `block_cap`, `drive_type`,`drive_speed`, `drive_push`, `pass_method`, `pass_comp`,`block_mech`) VALUES 
 (".$shoottime.",".$successrate.",".$pickup.",".$catcher.",".$trusscatch.",".$blockcap.",".$drivetype.",".$drivespeed.",".$pushiness.",".$passmethod.",".$passcomp.",".$blockmech."`)"); //The good stuff, pass off to mysql
 
 //Tidy up
