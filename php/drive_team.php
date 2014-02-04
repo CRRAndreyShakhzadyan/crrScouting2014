@@ -16,7 +16,7 @@ if (mysqli_connect_errno()){
 }
 
 mysqli_query($con,"INSERT INTO `team_data`(`team_number`,`work_well`,`mentors`) VALUES 
-(".$team_number.", ".$work_well.", ".$mentors$.")");//The good stuff, pass off to mysql
+(".$team.", ".$work_well.", ".$mentors$.")");//The good stuff, pass off to mysql
 
 //Tidy up
 mysqli_close($con);
