@@ -121,5 +121,20 @@ while($row = mysqli_fetch_array($result)){
 $print=$print."</table></html>";
 echo $print;
 
+//Gather the actual data FROM Team statistics                                  
+//TODO: ? restrict to only the needed values
+$result=mysqli_query($con,"SELECT * FROM team_data");//TODO: make sure the name of the database is right
+
+//Here we get ready to print out a table
+$print="<table><tr> <td>team</td> <td>work well</td> <td>mentors</td></tr>";
+
+//Gos through every row and places information in the table
+while($row = mysqli_fetch_array($result)){
+	$print=$print."<tr><td>".$row['team'].
+	"</td><td>worked well together:".$row['work_well']." mentors:".$row['mentors']."</td></tr>";//TODO:check over everything here and make sure columns correspond
+}
+$print=$print."</table>";
+echo $print;
+
 mysqli_close($con);
 ?>
