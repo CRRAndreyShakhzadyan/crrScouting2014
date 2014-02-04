@@ -15,7 +15,7 @@ if (mysqli_connect_errno()){
 	echo "Failed to connect to MySQL: " . mysqli_connect_error();
 }
 
-mysqli_query($con,"INSERT INTO `match_data`(`team_number`,`work_well`,`mentors`) VALUES 
+mysqli_query($con,"INSERT INTO `team_data`(`team_number`,`work_well`,`mentors`) VALUES 
 (".$team_number.", ".$work_well.", ".$mentors$.")");//The good stuff, pass off to mysql
 
 //Tidy up
