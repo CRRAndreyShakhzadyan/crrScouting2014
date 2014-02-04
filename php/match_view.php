@@ -117,10 +117,9 @@ while($row = mysqli_fetch_array($result)){
 		$print=$print."<td>".$row['tags']."</td>";
 	}
 	$print=$print."</tr>";
-		
-	echo $print;
 }
-echo "</table></html>";
+$print=$print."</table></html>";
+echo $print;
 
 mysqli_close($con);
 ?>
