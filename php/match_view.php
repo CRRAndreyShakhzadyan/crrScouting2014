@@ -45,14 +45,18 @@ if (mysqli_connect_errno()){
 $result=mysqli_query($con,"SELECT * FROM robot_data");
 
 //Here we get ready to print out a table
-$print="<table><tr> <td>team</td> <td>info</td></tr>";
-echo $print;
+$print="<table><tr> <td>team</td> <td>drive train</td> <td>passing/scoring mechanism</td> <td>catching mechanism</td> <td>defensive capabilities</td></tr>";
 
 //Gos through every row and places information in the table
-// /*while($row = mysqli_fetch_array($result)){
-	// //TODO:Find out what columns should go here
-// }*/
-
+while($row = mysqli_fetch_array($result)){
+	$print=$print."<tr><td>".$row['team'].
+	"</td><td>type:".$row['drive_type']." speed:".$row['drive_speed']." pushiness:".$row['drive_push'].
+	"</td><td>pass method:".$row['pass_method']." compatability:".$row['pass_comp'].
+	"</td><td> catcher:".$row['catcher']." truss catcher".$row['truss_catch'].
+	"</td><td> block ability:".$rows['block_ability']." block type:".$rows['block_mech']."</td></tr>";//TODO:check over everything here and make sure columns correspond
+}
+$print=$print."</table>";
+echo $print;
 
 //Gather the actual data FOR MATCHES                         <-------------------------Matches
 //TODO: ? restrict to only the needed values
