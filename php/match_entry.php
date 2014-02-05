@@ -41,6 +41,10 @@ if (!mysqli_query($con,$query))
 //Tidy up
 mysqli_close($con);
 
+if(strcmp($_POST["tags"],"#econimal") == 0)
+{
+	echo '<iframe width="640" height="360" src="//www.youtube.com/embed/h7yfaSTSxBQ?feature=player_detailpage" frameborder="0" allowfullscreen></iframe>';
+}
 echo("Form submitted successfully. If the back button infuriates you feel free to press <a href='match_entry.html'>here.</a>");
 }
 
