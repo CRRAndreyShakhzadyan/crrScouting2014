@@ -21,7 +21,8 @@
 Does the robot have floor pickup? <input type="checkbox" name="floor_pickup">
 <br>
 <h3>Shooter:</h3>
-How much time does it take to shoot in seconds? <input type="number" name="shooting_time"> 
+How much time does it take to shoot in seconds? <input type="number" name="shoot"> </input>
+What is the rate of the robot's successful goals? <input type="number" name="goal_rate"></input>
 <br>
 <h3>Drivetrain:</h3>
 <textarea name="drive_type" rows="5" cols="60">Type: </textarea>
@@ -31,19 +32,19 @@ How much time does it take to shoot in seconds? <input type="number" name="shoot
 <textarea name="drive_push" rows="5" cols="60">Pushiness: </textarea>
 <br>
 <h3>Ejection/Kicker:</h3>
-<textarea name="passing" rows="5" cols="60">Method of passing: </textarea>
+<textarea name="pass_method" rows="5" cols="60">Method of passing: </textarea>
 <br>
-<textarea name="compatibility" rows="5" cols="60">Compatibility of passing: </textarea>
+<textarea name="pass_comp" rows="5" cols="60">Compatibility of passing: </textarea>
 <br>
 <h3>Catcher: </h3>
 Does the robot have a catcher? <input type="checkbox" name="catcher" rows="5" cols="60">
 <br>
-Can the robot catch over the truss? <input type="checkbox" name="truss_catch" rows="5" cols="60">
+Can the robot catch over the truss? <input type="checkbox" name="catcher" rows="5" cols="60">
 <br>
 <h3>Blocker/Defense:</h3>
-<textarea name="block_ablitiy" rows="5" cols="60">Capability of blocking in a viable fashion: </textarea>
+<textarea name="block_ability" rows="5" cols="60">Capability of blocking in a viable fashion: </textarea>
 <br>
-<textarea name="block_type" rows="5" cols="60">Specific mechanisms designed to block: </textarea>
+<textarea name="block_mech" rows="5" cols="60">Specific mechanisms designed to block: </textarea>
 <br>
 <textarea name="block_success" rows="5" cols="60">Success rate of blocking: </textarea>
 <br>
@@ -51,6 +52,7 @@ Can the robot catch over the truss? <input type="checkbox" name="truss_catch" ro
 <center><input type="submit"></center>
 
 </form>
+
 </div>
 </body>
 </html>
