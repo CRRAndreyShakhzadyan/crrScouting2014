@@ -1,7 +1,7 @@
 <?php
 
 echo '<!DOCTYPE html>
-<html lang="en"><head><link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css"></head>';
+<html lang="en"><head><link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css"><link rel= "stylesheet" href="css/default.css" type="text/css"></head>';
 $team = 0;
 $heads=array("autonomous","tosses over bar","catches from bar","passes","received","high goals","low goals","defense estimate","fouls","technical fouls","problems","won/lost","notes","tags");//stores the column header names
 
