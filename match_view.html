@@ -19,36 +19,68 @@
 
 </form>
 
+<h2>Or Select All That Apply:</h2>
+<button onclick="checkAll()">Check All</button>
+<button onclick="unCheckAll()">Uncheck All</button>
 <form action="php/match_view.php" method="post">
 <table border ="0" align="center">
 <tr>
-<h2>Or Select All That Apply:</h2>
-</tr><tr>
-<td>Autonomous:<td><input type=	"checkbox" name="auton" ></td></td>
-<td>Passes Over Truss:<td><input type="checkbox" name="truss_toss" ></td></td>
-<td>Hot:<td><input type= "checkbox" name="hot"></td></td>
+<td>Autonomous:<td><input type=	"checkbox" name="auton" id="a"></td></td>
+<td>Passes Over Truss:<td><input type="checkbox" name="truss_toss" id="b"></td></td>
+<td>Hot:<td><input type= "checkbox" name="hot" id="c"></td></td>
 </tr>
 <tr>
-<td>Catches:<td><input type="checkbox" name="catches" ></td></td>
-<td>Passes:<td><input type="checkbox" name="passes" ></td></td>
-<td>Received:<td><input type="checkbox" name="received" ></td></td>
+<td>Catches:<td><input type="checkbox" name="catches" id="d"></td></td>
+<td>Passes:<td><input type="checkbox" name="passes" id="e"></td></td>
+<td>Received:<td><input type="checkbox" name="received" id="f"></td></td>
 </tr>
 <tr><br>
-<td>High goals:<td><input type="checkbox" name="goal_high" ></td></td>
-<td>Low goals:<td><input type="checkbox" name="goal_low" ></td></td>
-<td>Points defended:<td><input type="checkbox" name="defense" ></td></td>
+<td>High goals:<td><input type="checkbox" name="goal_high" id="g"></td></td>
+<td>Low goals:<td><input type="checkbox" name="goal_low" id="h"></td></td>
+<td>Points defended:<td><input type="checkbox" name="defense" id="i"></td></td>
 <br></tr><tr>	
-<td>Balls Killed:<td><input type="checkbox" name="killed" ></td></td>
-<td>Tags:<td><input type="checkbox" name="tags" ></td></td>
-<td>Notes:<td><input type="checkbox" rows="10" cols="60" name="notes"></td></td>
+<td>Balls Killed:<td><input type="checkbox" name="killed" id="j"></td></td>
+<td>Tags:<td><input type="checkbox" name="tags" id="k"></td></td>
+<td>Notes:<td><input type="checkbox" rows="10" cols="60" name="notes" id="l"></td></td>
 </tr>
 </table>
 <br>		
 <input type = "submit" name = "searchByTags">
 
-</div>
 </form>
 
+<script>
+function checkAll(){
+	document.getElementById("a").checked=true;
+	document.getElementById("b").checked=true;
+	document.getElementById("c").checked=true;
+	document.getElementById("d").checked=true;
+	document.getElementById("e").checked=true;
+	document.getElementById("f").checked=true;
+	document.getElementById("g").checked=true;
+	document.getElementById("h").checked=true;
+	document.getElementById("i").checked=true;
+	document.getElementById("j").checked=true;
+	document.getElementById("k").checked=true;
+	document.getElementById("l").checked=true;
+}
+
+function unCheckAll(){
+	document.getElementById("a").checked=false;
+	document.getElementById("b").checked=false;
+	document.getElementById("c").checked=false;
+	document.getElementById("d").checked=false;
+	document.getElementById("e").checked=false;
+	document.getElementById("f").checked=false;
+	document.getElementById("g").checked=false;
+	document.getElementById("h").checked=false;
+	document.getElementById("i").checked=false;
+	document.getElementById("j").checked=false;
+	document.getElementById("k").checked=false;
+	document.getElementById("l").checked=false;
+}
+</script>
 
 </body>
+</div>
 </html>
