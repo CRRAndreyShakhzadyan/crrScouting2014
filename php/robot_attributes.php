@@ -1,12 +1,13 @@
 <?php
 // define variables, set them to default values
-$shoottime = $successrate = 0;
+$shoottime = $successrate= $team = 0;
 $drivetype = $drivespeed = $pushiness = $passmethod = $passcomp = $blockmech = $blockability = "";
 $pickup = $catcher = $trusscatch = $blockcap = False;
 
 //this assigns form data to the variables
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
+	$team = $_POST["teamnum"];
 	$shoottime = $_POST["shoot"];
 	$successrate = $_POST["goal_rate"];
 	$pickup = isset($_POST['pickup']);
@@ -29,7 +30,7 @@ $con=mysqli_connect("localhost","root","","scouting_database");
 if (mysqli_connect_errno()){
 	echo "Failed to connect to MySQL: " . mysqli_connect_error();
 }
-$query = "INSERT INTO `robot_attributes`(`shoot_time`, `goal_rate`, `pickup`, `catcher`, `truss_catch`, `block_cap`, `drive_type`, `drive_speed`, `drive_push`, `pass_method`, `pass_comp`, `block_mech`, `block_ability`) VALUES ('$shoottime','$successrate','$pickup','$catcher','$trusscatch','$blockcap','$drivetype','$drivespeed','$pushiness','$passmethod','$passcomp','$blockmech','$blockability')";
+$query = "INSERT INTO `robot_attributes`(`team`,`shoot_time`, `goal_rate`, `pickup`, `catcher`, `truss_catch`, `block_cap`, `drive_type`, `drive_speed`, `drive_push`, `pass_method`, `pass_comp`, `block_mech`, `block_ability`) VALUES ('$team','$shoottime','$successrate','$pickup','$catcher','$trusscatch','$blockcap','$drivetype','$drivespeed','$pushiness','$passmethod','$passcomp','$blockmech','$blockability')";
  
 echo $query;
 
