@@ -108,7 +108,8 @@ function decrement(field){
 		document.getElementById(field).value=1;
 	}else{
 		var v=parseInt(s);
-		v-=1;
+		if(v>=1)
+		     v-=1;
 		document.getElementById(field).value=v;
 	}
 }
