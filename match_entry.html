@@ -8,7 +8,7 @@
 <body>
 <div class= "formb1">
 	
-<a href="index.html"><img src="assets/Scouting4.png" alt="Scouting4.png" width="1000" height="30"></a>
+<a href="index.html"><img src="assets/Scouting4.png" alt="Scouting4.png" width="639" height="200"></a>
 
 <h1>Data Entry Form</h1>
 <p>
@@ -23,27 +23,92 @@ Team number:<input type="number" name="team"> </br>
 
 Shot high:<input type="radio" name="shot_auton" value="high"></br>
 Shot low:<input type="radio" name="shot_auton" value="low"></br>
-Didn't shoot (Just making sure you're awake!):<input type="radio" name="shot_auton" value="slept"></br>
+Missed:<input type="radio" name="shot_auton" value="missed_auton"></br> <!-- TODO:add these fields to the database and to the php script -->
 Hot goal:<input type="checkbox" name="hot" value="hot"></br>
 Drove forward:<input type="checkbox" name="drove_auton" value="drove"></br>
 </br>
 <h3>Main game:</br></h3>
-Passes Over Bar:<input type="number" name="bar_toss"></br>
-Catches From Bar:<input type="number" name="bar_catch"></br>
-Passes (don't include the bar):<input type="number" name="passes"></br>
-Recieved:<input type="number" name="recieved"></br>
-High goals:<input type="number" name="goal_high"></br>
-Low goals:<input type="number" name="goal_low"></br>
+
+Passes Over Bar:<input type="number" name="bar_toss" id="a">
+<button onclick="increment('a')" src="/assets/plus.png" type="button"><img src="/assets/plus.png" width="20" height="20"></button>
+<button onclick="decrement('a')" src="/assets/plus.png" type="button"><img src="/assets/minus.png" width="16" height="16"></button></br>
+
+Catches From Bar:<input type="number" name="bar_catch" id="b">
+<button onclick="increment('b')" src="/assets/plus.png" type="button"><img src="/assets/plus.png" width="16" height="16"></button>
+<button onclick="decrement('b')" src="/assets/plus.png" type="button"><img src="/assets/minus.png" width="16" height="16"></button></br>
+
+Passes (don't include the bar):<input type="number" name="passes" id="c">
+<button onclick="increment('c')" src="/assets/plus.png" type="button"><img src="/assets/plus.png" width="16" height="16"></button>
+<button onclick="decrement('c')" src="/assets/plus.png" type="button"><img src="/assets/minus.png" width="16" height="16"></button></br>
+
+
+Recieved:<input type="number" name="recieved" id="d">
+<button onclick="increment('d')" src="/assets/plus.png" type="button"><img src="/assets/plus.png" width="16" height="16"></button>
+<button onclick="decrement('d')" src="/assets/plus.png" type="button"><img src="/assets/minus.png" width="16" height="16"></button></br>
+
+
+High goals:<input type="number" name="goal_high" id="e">
+<button onclick="increment('e')" src="/assets/plus.png" type="button"><img src="/assets/plus.png" width="16" height="16"></button>
+<button onclick="decrement('e')" src="/assets/plus.png" type="button"><img src="/assets/minus.png" width="16" height="16"></button></br>
+
+
+Low goals:<input type="number" name="goal_low" id="f">
+<button onclick="increment('f')" src="/assets/plus.png" type="button"><img src="/assets/plus.png" width="16" height="16"></button>
+<button onclick="decrement('f')" src="/assets/plus.png" type="button"><img src="/assets/minus.png" width="16" height="16"></button></br>
+
+
+Missed goals:<input type="number" name="missed" id="g">
+<button onclick="increment('g')" src="/assets/plus.png" type="button"><img src="/assets/plus.png" width="16" height="16"></button>
+<button onclick="decrement('g')" src="/assets/plus.png" type="button"><img src="/assets/minus.png" width="16" height="16"></button></br>
+
+
 Estimated points defended:<input type="number" name="defense"></br>
-Balls Killed:<input type="number" name="killed"></br>
-Fouls:<input type = "number" name = "fouls"></br>
-Technical Fouls:<input type = "number" name = "tech_fouls"></br>
+
+
+Balls Killed:<input type="number" name="killed" id="h">
+<button onclick="increment('h')" src="/assets/plus.png" type="button"><img src="/assets/plus.png" width="16" height="16"></button>
+<button onclick="decrement('h')" src="/assets/plus.png" type="button"><img src="/assets/minus.png" width="16" height="16"></button></br>
+
+
+Fouls:<input type = "number" name = "fouls" id="i">
+<button onclick="increment('i')" src="/assets/plus.png" type="button"><img src="/assets/plus.png" width="16" height="16"></button>
+<button onclick="decrement('i')" src="/assets/plus.png" type="button"><img src="/assets/minus.png" width="16" height="16"></button></br>
+
+
+Technical Fouls:<input type = "number" name = "tech_fouls" id="j">
+<button onclick="increment('j')" src="/assets/plus.png" type="button"><img src="/assets/plus.png" width="16" height="16"></button>
+<button onclick="decrement('j')" src="/assets/plus.png" type="button"><img src="/assets/minus.png" width="16" height="16"></button></br>
+
+
 Tags (separate by commas):<input type="text" name="tags" size="60"></br>
-Notes:<br><textarea rows="10" cols="60" name="notes">Notes go here</textarea></br>
-Technical Problems:<br><textarea rows = "7" cols = "60" name = "tech_problems">Technical Problems</textarea></br>
+Notes:<br><textarea rows="10" cols="60" name="notes"></textarea></br>
+Technical Problems:<br><textarea rows = "7" cols = "60" name = "tech_problems">NA</textarea></br>
 <input type="submit">
 </form>
 </div>
 
+<script type="text/javascript">
+function increment(field){
+	var s=document.getElementById(field).value;
+	if(s==""){
+		document.getElementById(field).value=1;
+	}else{
+		var v=parseInt(s);
+		v+=1;
+		document.getElementById(field).value=v;
+	}
+}
+
+function decrement(field){
+	var s=document.getElementById(field).value;
+	if(s==""){
+		document.getElementById(field).value=1;
+	}else{
+		var v=parseInt(s);
+		v-=1;
+		document.getElementById(field).value=v;
+	}
+}
+</script>
 </body>
 </html>

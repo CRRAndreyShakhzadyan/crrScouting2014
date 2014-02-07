@@ -4,7 +4,6 @@ html
 	text-align: center;
 	font-family:"Arial", Helvetica, sans-serif;
 	color: #EEEEEE;
-
 }	
 
 hr
@@ -50,6 +49,7 @@ textarea
 body
 {
 	background-color: #AD0000;
+	bottom:0px;
 }
 
 input
@@ -57,10 +57,43 @@ input
 	margin:2px;
 }
 
-img
+button{
+	padding:0px;
+	border:0px;
+}
+
+table.display
 {
-	width: 639;
-	height: 200;
+	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+	width:100%;
+	border-collapse:collapse;
+}
+
+th
+{
+	font-size:1em;
+	padding:3px 7px 2px 7px;
+	font-size:1.1em;
+	text-align:center;
+	padding-top:5px;
+	padding-bottom:4px;
+	background-color:#770000;
+	color:#FFFFFF;
+}
+
+tr.alt td 
+{
+	//color:#FFFFFF;
+	font-size:1em;
+	padding:3px 7px 2px 7px;
+	background-color:#AD0000;
+}
+
+td
+{
+	font-size:1em;
+	padding:3px 7px 2px 7px;
+	//color:#FFFFFF;
 }
 
 a:link
@@ -93,56 +126,7 @@ a:active
 	
 }
 
-/* Glorious and mighty formp classes (protip: the commented out ones suck, don't use them)*/
-/*.formp0
-{
-	text-align: left;
-	border-radius: 3px;
-	width: auto;
-	background-color: #B51E10;
-	padding:10px;
-	margin-left: 10%;
-	margin-right: 10%;
-}*/
-
-
-.formp1
-{
-	text-align: left;
-	width: auto;
-	background-color: #0000FF ;
-	padding:10px;
-	margin-left: 20%;
-	margin-right: 20%;
-	
-}
-
-/* .formp2
-{
-	
-	background-image: url("../assets/crrTexturelight.bmp");
-	padding:10px;
-	background-color: #000000 ;
-	margin-left: 10%;
-	margin-right: 10%;
-	
-	
-} */
-
-
-
 /* Glorious and mighty formb classes (needs cleaning up(real bad)) */
-.formb0
-{
-	text-align: center;
-	border-radius: 3px;
-	width: auto;
-	background-color: #700000;
-	padding:10px;
-	margin-left: 10%;
-	margin-right: 10%;
-}
-
 .formb1
 {
 	text-align: center;
@@ -152,17 +136,5 @@ a:active
 	padding:10px;
 	margin-left: 10%;
 	margin-right: 10%;
+	min-height:100%;
 }
-
-/* .formb2
-{
-	
-	background-image: url("crrTexturelight.bmp");
-	padding:10px;
-	border-radius: 3px;
-	margin-left: 10%;
-	margin-right: 10%;
-	
-	
-} */
-
