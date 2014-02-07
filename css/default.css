@@ -126,6 +126,13 @@ a:active
 	
 }
 
+/*This make arrow on number input of disappear*/
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 /* Glorious and mighty formb classes (needs cleaning up(real bad)) */
 .formb1
 {
