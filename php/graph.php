@@ -12,15 +12,29 @@ if(isset($_GET['team'])){
 	$team=$_GET['team'];
 }
 
-$con=mysqli_connect("localhost","root","code red","scouting");
+$con=mysqli_connect("localhost","root","","scouting_database");
 
 // Check connection
 if (mysqli_connect_errno()){
 	echo "Failed to connect to MySQL: " . mysqli_connect_error();
 }
+
+$result=mysqli_query($con,"SELECT * FROM robot_data WHERE team=".$team);
+
+//$print="<table class='display'><tr> <th>team</th> <th>drive train</th> <th>passing/scoring mechanism</th> <th>catching mechanism</th> <th>defensive capabilities</th></tr>";
+$print="";
+while($row = mysqli_fetch_array($result)){
+	$print=$print."<object data='../graphs/team639.jpg'><object data='../graphs/team".$team.".jpeg'><img src='../assets/default.png'></img></object></object>".
+	"</br>type:".$row['drive_type']." speed:".$row['drive_speed']." pushiness:".$row['drive_push'].
+	"</br>pass method:".$row['pass_method']." compatability:".$row['pass_comp'].
+	"</br>catcher:".$row['catcher']." truss catcher".$row['truss_catch'].
+	"</br>block ability:".$row['block_ability']." block type:".$row['block_mech']."</td></tr></br>";//TODO:check over everything here and make sure columns correspond
+}
+$print=$print."</table>";
+echo $print;
+
+
 //Gather the actual data FOR MATCHES
-//TODO: ? restrict to only the needed values
-//$result=mysqli_query($con,"SELECT * FROM match_data WHERE team=`".$team."`");
 $result=mysqli_query($con,"SELECT * FROM match_data WHERE team=".$team);
 
 if(!$result){
@@ -93,6 +107,7 @@ $graph->Add($plotA);
  
 // and display the graph
 $graph->legend->SetPos(.1,.9,'left','top');
+//$graph->Stroke();
 $adress="../graphs/radar.png";
 unlink($adress);
 $graph->Stroke($adress);
@@ -108,6 +123,7 @@ $stats=array($toss,$catch,$passes,$receive,$high,$low,$missed,$defense);
 
 //Gather the actual data FOR MATCHES
 //TODO: ? restrict to only the needed values
+//$result=mysqli_query($con,"SELECT * FROM match_data WHERE team=`".$team."`");
 $result=mysqli_query($con,"SELECT * FROM match_data WHERE team=".$team);
 
 if(!$result){
@@ -141,6 +157,7 @@ for($i=0;$i<sizeof($stats);$i++){
  
 	// and display the graph
 	$graph->legend->hide();
+	//$graph->Stroke();
 	$adress="../graphs/".$titles[$i].".png";
 	unlink($adress);
 	$graph->Stroke($adress);
