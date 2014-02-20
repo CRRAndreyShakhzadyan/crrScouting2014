@@ -31,13 +31,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
 	$defense = isset($_POST["defense"]);
 	$fouls = isset($_POST["fouls"]);
 	$tech_fouls = isset($_POST["fouls"]);
-	$tech_problems = isset($_POST["tech_problems"]);
 	$won = isset($_POST["won"]);
 	$notes = isset($_POST["notes"]);
 	$tags = isset($_POST["tags"]);
 	
 	//stores the boolean values from the form responses
-	$cols=array($auton,$barToss,$barCatch,$passes,$recieve,$goalHigh,$goalLow,$defense,$fouls,$tech_fouls,$tech_problems,$won,$notes,$tags);
+	$cols=array($auton,$barToss,$barCatch,$passes,$recieve,$goalHigh,$goalLow,$defense,$fouls,$tech_fouls,$won,$notes,$tags);
 }
 
 
@@ -109,15 +108,17 @@ while($row = mysqli_fetch_array($result)){
 	}if($cols[9]){
 		$print=$print."<td>".$row['tech_fouls']."</td>";
 	}if($cols[10]){
-		$print=$print."<td>".$row['tech_problems']."</td>";
-	}if($cols[11]){
 		$print=$print."<td>".$row['win/lose']."</td>";
-	}if($cols[12]){
+	}if($cols[11]){
 		$print=$print."<td>".$row['notes']."</td>";
-	}if($cols[13]){
+	}if($cols[12]){
 		$print=$print."<td>".$row['tags']."</td>";
 	}
-	$print=$print."<td>".$row['won']."</td>";
+	if($row['won'])
+		$print=$print."<td>won</td>";
+	else
+		$print=$print."<td>lost</td>";
+	
 	$printf=$printf.$print."</tr>";
 }
 $printf=$printf."</table></body></div></html>";

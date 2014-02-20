@@ -1,15 +1,4 @@
 <?php
-define("TICK_TIME",'5.0');//the time deducted with each tick
-
-$con=mysqli_connect("localhost","root","","scouting_database");
-$result_match=mysqli_query($con,"SELECT * FROM 'match_data'");
-$result_team=mysqli_query($con,"SELECT * FROM 'robot_data'")
-
-while($row=mysql_fetch_array($result)){
-//TODO: you know, MAKE THIS ACTUALLY WORK
-}
-mysqli_close($con);
-
 class Robot{
 	//declare variable types with default values of -1 and False
 	private $team = -1;
@@ -18,21 +7,28 @@ class Robot{
 	private $autonShoot =-1;//0=can't shoot, 6=shoots low, 15=shoots high, 11=shoots hot low, 20=shoots hot high
 	private $passSpeed = -1;//for now we are using the same variable for passing and shooting, partly to make scouting easier
 	private $scoreProb = -1.0;
-	private $chatchProb = -1.0;
+	private $chatchProb = -1.0;//deprecating
 	private $passOver = False;
 	private $catchOver = False;
 	private $autonDrive = False;
-	
 	private $task="";
 	private $taskTimeLeft=-1;//-1 is invalid, continue until another task is set
 	private $hasBall = True;//this is declared true as per the rules
 	
-	public function __construct(){
-		
+	public function __construct($p_team,$p_avgDefense,$p_shoot,$p_autonShoot,$p_passSpeed,$p_scoreProb,$p_passOver,$p_catchOver,$p_autonDrive){
+		$team=$p_team;
+		$avgDefense=$p_avgDefense;
+		$shoot=$p_shoot;
+		$autonShoot=$p_autonShoot;
+		$passSpeed=$p_passSpeed;
+		$scoreProb=$p_scoreProb;
+		$passOver=$p_passOver;
+		$catchOver=$p_catchOver;
+		$autonDrive=$p_autonDrive;
 	}
 
 	public function pass($defense){//attempts to pass and returns whether the attempt was successful
-		if(rand(0,1)<=$scoreProb-$defense){ //TODO?: use a better random number generator?
+		if(rand(0,1)<=$scoreProb-$defense/10){ //TODO?: use a better random number generator?
 			if($hasBall){//TODO?:change above, keep better track?
 				$hasBall = False;
 				return True;
@@ -53,11 +49,10 @@ class Robot{
 	}
 	
 	public function tick($defended){
-		if($taskTimeLeft!=-1){
+		if( ($taskTimeLeft-TICK_TIME)>0 ){//if the robot still has to "wind up"
 			$taskTimeLeft-=TICK_TIME;
 			return false;
-		}
-		if($taskTimeLeft<=0){
+		}else{
 			if(strcmp($task,"pass")==0)
 				return pass($defended);
 			if(strcmp($task,"shoot")==0)
@@ -68,7 +63,7 @@ class Robot{
 		return false;
 	}
 	
-	{//getters
+	//getters
 	public function getTeam(){
 		return $team;
 	}
@@ -78,7 +73,7 @@ class Robot{
 	}
 	
 	public function getDefended(){
-		return floor(rand(0,$avgDefense*TICK_TIME/140)*140/(TICK_TIME*$avgDefense));
+		return floor(rand(0,$avgDefense*TICK_TIME/140)*140/(TICK_TIME*$avgDefense));//TODO: make this something besides a load of crap
 	}
 	
 	public function getShoot(){
@@ -118,8 +113,7 @@ class Robot{
 	}
 	
 	public function getTask(){
-		return $task
-	}
+		return $task;
 	}
 }
 ?>

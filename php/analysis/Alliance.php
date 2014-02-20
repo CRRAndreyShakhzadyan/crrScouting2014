@@ -2,24 +2,39 @@
 class Alliance{
 	const MISS_PENALTY=10;//how much time is deducted from a missed shot
 	
-	private $robotA=new Robot();
-	private $robotB=new Robot();
-	private $robotC=new Robot();
+	private $robotA;
+	private $robotB;
+	private $robotC;
 	
-	private $ballOwner=$robotA;
+	private $ballOwner;
 	private $ballHeat=0;
 	private $score=0;
 	private $passedOver=false;
 	
-	private $robotTeam = array($robotA,$robotB,$robotC);
+	private $robotTeam = array();
+	
+	private $winLoss = 0;//TODO: make this an actual ratio?
+	
+	//Adds a new match outcome to the win loss ratio
+	//$won is a boolean value representing whether the robot won or not
+	public function placeMatch($won){
+		if($won)
+			$winLoss+=1;
+		else if(!$won)
+			$winLoss-=1;
+	}
 	
 	public function __construct(Robot $a, Robot $b, Robot $c){
-		this->$robotA=$a;
-		this->$robotB=$b;
-		this->$robotC=$c;
 		$a->reset();
 		$b->reset();
 		$c->reset();
+		$robotA=$a;
+		$robotB=$b;
+		$robotC=$c;
+		$robotTeam[0]=$a;
+		$robotTeam[1]=$b;
+		$robotTeam[2]=$c;
+		$ballOwner=$robotA;
 	}
 	
 	//passes the ball to a random robot params: 
@@ -81,29 +96,30 @@ class Alliance{
 	//calls robot->tick() methods and does the other things in this decade
 	//defended should be a reference
 	public function tick($defended){
-		if($robotA->tick($defended)){
-			$task=$robotA->getTask()
+		if($robotA->tick($defended)!=0){
+			$task=$robotA->getTask();
 			if(strcmp($task,"pass")==0){
 				passOverBar($robotA,$robotB);//TODO?:make this randomized
 			}else if(strcmp($task,"shoot")==0){
-				score+=($robotA->getShoot()>=2 ? 10:1)+$ballHeat;
+				$score+=($robotA->getShoot()>=2 ? 10:1)+$ballHeat;
 			}
 		}
-		if($robotB->tick($defended)){
-			$task=$robotB->getTask()
+		if($robotB->tick($defended)!=0){
+			$task=$robotB->getTask();
 			if(strcmp($task,"pass")==0){
 				passOverBar($robotB,$robotC);//TODO?:make this randomized
 			}else if(strcmp($task,"shoot")==0){
-				score+=($robotB->getShoot()>=2 ? 10:1)+$ballHeat;
+				$score+=($robotB->getShoot()>=2 ? 10:1)+$ballHeat;
 			}
 		}
-		if($robotC->tick($defended)){
-			$task=$robotC->getTask()
+		if($robotC->tick($defended)!=0){
+			$task=$robotC->getTask();
 			if(strcmp($task,"pass")==0){
 				passOverBar($robotC,$robotA);//TODO?:make this randomized
 			}else if(strcmp($task,"shoot")==0){
-				score+=($robotC->getShoot()>=2 ? 10:1)+$ballHeat;
+				$score+=($robotC->getShoot()>=2 ? 10:1)+$ballHeat;
 			}
+		}
 	}
 	
 	//Getter methods
@@ -119,6 +135,13 @@ class Alliance{
 	public function getPassedOver(){//return whether the ball has been passed over the bar
 		return $passedOver;
 	}
+	
+	public function getScore(){
+		return $score;
+	}
+	
+	public function getWinLoss(){
+		return $winLoss;
+	}
 }
-//we choose to go to the moon
 ?>

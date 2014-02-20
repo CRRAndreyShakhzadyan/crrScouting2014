@@ -1,0 +1,51 @@
+<html>
+<head>
+<title>Code Red Scouting</title>
+
+<link rel= "stylesheet" href="../css/default.css" type="text/css">
+<script type="text/javascript">
+function enter(e){
+	var unicode=e.keyCode? e.keyCode : e.charCode;
+	if(unicode==13){
+		loadGraphs();
+		//document.getElementById("images").innerHTML=phpGET("/php/graph.php",new array,("team"),new array(document.getElementById("t").value));
+	}
+}
+
+function loadGraphs()
+{
+	var xmlhttp;
+	if (window.XMLHttpRequest){
+		xmlhttp=new XMLHttpRequest();
+	}else{
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	xmlhttp.onreadystatechange=function(){
+		if (xmlhttp.readyState==4 && xmlhttp.status==200)
+		{
+			document.getElementById("images").innerHTML=xmlhttp.responseText;
+		}
+	}
+	//document.write("/php/graph.php?team="+document.getElementById("t").value);
+	xmlhttp.open("GET","/php/graph.php?team="+document.getElementById("t").value,true);
+	xmlhttp.send();
+	//alert("steve");
+}
+</script>
+</head>
+<body>
+<div class= "formb1">
+	
+<a href="index.html"><img src="assets/Scouting4.png" alt="Scouting4.png" width="639" height="200"></a>
+
+<h1>Graphics:</h1>
+
+<!--<form>-->
+Team number:<input type="number" name="team" id="t" onkeypress="enter(event)"> </br>
+<button type="button" onClick="loadGraphs()">display</button>
+<!--</form>-->
+</br></br>
+<div id="images"></div>
+</body>
+</div>
+</html>

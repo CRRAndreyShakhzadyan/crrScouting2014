@@ -20,34 +20,25 @@
 Team Number:<input type = "number" name = "teamnum">
 <h3>Floor Pickup: </h3>
 Does the robot have floor pickup? <input type="checkbox" name="floor_pickup">
-<br>
+</br>
 <h3>Shooter:</h3>
-How much time does it take to shoot in seconds? <input type="number" name="shoot"> </input>
-What is the rate of the robot's successful goals? <input type="number" name="goal_rate"></input>
-<br>
+How much time does it take to shoot in seconds? <input type="number" name="shoot_time"> </input>
+</br>
 <h3>Drivetrain:</h3>
-<textarea name="drive_type" rows="5" cols="60">Type: </textarea>
-<br>
-<textarea name="drive_speed" rows="5" cols="60">Speed: </textarea>
-<br>
-<textarea name="drive_push" rows="5" cols="60">Pushiness: </textarea>
-<br>
+<textarea name="drive" rows="5" cols="60">Type: </textarea>
+</br>
 <h3>Ejection/Kicker:</h3>
-<textarea name="pass_method" rows="5" cols="60">Method of passing: </textarea>
-<br>
-<textarea name="pass_comp" rows="5" cols="60">Compatibility of passing: </textarea>
-<br>
+<textarea name="passing" rows="5" cols="60"></textarea>
+</br>
 <h3>Catcher: </h3>
 Does the robot have a catcher? <input type="checkbox" name="catcher" rows="5" cols="60">
-<br>
-Can the robot catch a truss toss reliably? (use good judgment) <input type="checkbox" name="catcher" rows="5" cols="60">
-<br>
+</br>
+Can the robot catch over the truss? <input type="checkbox" name="catcher" rows="5" cols="60">
+</br>
 <h3>Blocker/Defense:</h3>
-<textarea name="block_ability" rows="5" cols="60">Capability of blocking in a viable fashion: </textarea>
+Success rate of blocking:<input type="number" name="block_success" rows="5" cols="60"></input></br></br>
+<textarea name="block" rows="5" cols="60">Capability of blocking in a viable fashion: </textarea>
 <br>
-<textarea name="block_mech" rows="5" cols="60">Specific mechanisms designed to block: </textarea>
-<br>
-<textarea name="block_success" rows="5" cols="60">Success rate of blocking: </textarea>
 <br>
 
 <center><input type="submit"></center>

@@ -8,7 +8,7 @@ echo '<html>
 <div class = "formb1">
 <body>
 <a href="../index.html"><img src="../assets/Scouting4.png" alt="Scouting4.png" width="639" height="200"></a>
-<h1>Match Results Per Robot</h1>';//TODO:update copied code
+<h1>Results Per Robot</h1>';//TODO:update copied code
 
 $con=mysqli_connect("localhost","root","","scouting_database");
 
@@ -19,19 +19,16 @@ if (mysqli_connect_errno()){
 
 //Gather the actual data FROM ROBOTS                                  
 //TODO: ? restrict to only the needed values
-$result=mysqli_query($con,"SELECT * FROM robot_attributes");
+$result=mysqli_query($con,"SELECT * FROM robot_data");
 
-//Here we get ready to print out a table
-$print="<table class='display'><tr> <th>team</th> <th>drive train</th> <th>passing/scoring mechanism</th> <th>catching mechanism</th> <th>defensive capabilities</th></tr>";
-
-//Gos through every row and places information in the table
+//$print="<table class='display'><tr> <th>team</th> <th>drive train</th> <th>passing/scoring mechanism</th> <th>catching mechanism</th> <th>defensive capabilities</th></tr>";
+$print="";
 while($row = mysqli_fetch_array($result)){
-	$print=$print."<tr><td>".$row['team'].
-	"</td><td>type:".$row['drive_type']." speed:".$row['drive_speed']." pushiness:".$row['drive_push'].
-	"</td><td>pass method:".$row['pass_method']." compatability:".$row['pass_comp'].
-	"</td><td> catcher:".$row['catcher']." truss catcher".$row['truss_catch'].
-	"</td><td> block ability:".$rows['block_ability']." block type:".$rows['block_mech']."</td></tr>";//TODO:check over everything here and make sure columns correspond
+	$print=$print."<h2>".$row['team']."</h2><object data='../graphs/team".$row['team'].".jpg'><object data='../graphs/team".$row['team'].".jpeg'><img src='../assets/default.png'></img></object></object>".
+	"</br><h3>Drive Train:</h3>".$row['drive'].
+	"<h3>Passing/Scoring:</h3>".$row['pass'].
+	"<h3>Catcher:</h3>".($row['catcher']==1 ? ($row['truss_catch']==1 ? "can catch from truss" : "cannot catch from truss") : "cannot catch").
+	"<h3>Defensive Capability:</h3>".$row['block']."</br><hr />";
 }
-$print=$print."</table>";
 echo $print;
 ?>

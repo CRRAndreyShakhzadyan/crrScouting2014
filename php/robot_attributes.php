@@ -8,20 +8,14 @@ $pickup = $catcher = $trusscatch = $blockcap = False;
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
 	$team = $_POST["teamnum"];
-	$shoottime = $_POST["shoot"];
-	$successrate = $_POST["goal_rate"];
+	$shootTime = $_POST["shoot_time"];
 	$pickup = isset($_POST['pickup']);
 	$catcher = isset($_POST['catcher']);
-	$trusscatch = isset($_POST['truss_catch']);
-	$blockcap = isset($_POST['block_cap']);
-	$drivetype = $_POST["drive_type"];
-	$drivespeed = $_POST["drive_speed"];
-	$pushiness = $_POST["drive_push"];
-	$passmethod = $_POST["pass_method"];
-	$passcomp = $_POST["pass_comp"];
-	$blockmech = $_POST["block_mech"];
-	$blockability = $_POST["block_ability"];
-	
+	$trussCatch = isset($_POST['truss_catch']);
+	$drive = $_POST["drive"];
+	$pass = $_POST["passing"];
+	$block = $_POST["block"];
+	$blockSuccess = $_POST["block_success"];
 }
 
 $con=mysqli_connect("localhost","root","","scouting_database");
@@ -30,9 +24,8 @@ $con=mysqli_connect("localhost","root","","scouting_database");
 if (mysqli_connect_errno()){
 	echo "Failed to connect to MySQL: " . mysqli_connect_error();
 }
-$query = "INSERT INTO `robot_attributes`(`team`,`shoot_time`, `goal_rate`, `pickup`, `catcher`, `truss_catch`, `block_cap`, `drive_type`, `drive_speed`, `drive_push`, `pass_method`, `pass_comp`, `block_mech`, `block_ability`) VALUES ('$team','$shoottime','$successrate','$pickup','$catcher','$trusscatch','$blockcap','$drivetype','$drivespeed','$pushiness','$passmethod','$passcomp','$blockmech','$blockability')";
- 
-echo $query;
+$query = "INSERT INTO `robot_data`(`team`,`shoot_time`,`pickup`,`catcher`,`truss_catch`,`drive`,`pass`,`block`,`block_success`)
+VALUES ('".$team."','".$shootTime."','".$pickup."','".$catcher."','".$trussCatch."','".$drive."','".$pass."','".$block."','".$blockSuccess."')";
 
 if(!mysqli_query($con,$query))
 {
@@ -41,5 +34,5 @@ if(!mysqli_query($con,$query))
 //Tidy up
 mysqli_close($con);
 
-echo("Form submitted successfully. If the back button infuriates you feel free to press <a href='http://localhost/robot_attributes.html'>here.</a>");
+echo("Form submitted successfully. If the back button infuriates you feel free to press <a href='../robot_attributes.html'>here.</a>");
 ?>

@@ -24,16 +24,17 @@ Team number:<input type="number" name="team"> </br>
 Shot high:<input type="radio" name="shot_auton" value="high"></br>
 Shot low:<input type="radio" name="shot_auton" value="low"></br>
 Missed:<input type="radio" name="shot_auton" value="missed_auton"></br> <!-- TODO:add these fields to the database and to the php script -->
+Didn't Take Ball:<input type="radio" name="shot_auton" value="NA"></br>
 Hot goal:<input type="checkbox" name="hot" value="hot"></br>
 Drove forward:<input type="checkbox" name="drove_auton" value="drove"></br>
 </br>
 <h3>Main game:</br></h3>
 
-Passes Over Bar:<input type="number" name="bar_toss" id="a">
+Passes Over Truss:<input type="number" name="bar_toss" id="a">
 <button onclick="increment('a')" src="/assets/plus.png" type="button"><img src="/assets/plus.png" width="20" height="20"></button>
 <button onclick="decrement('a')" src="/assets/plus.png" type="button"><img src="/assets/minus.png" width="20" height="20"></button></br>
 
-Catches From Bar:<input type="number" name="bar_catch" id="b">
+Catches From Truss:<input type="number" name="bar_catch" id="b">
 <button onclick="increment('b')" src="/assets/plus.png" type="button"><img src="/assets/plus.png" width="20" height="20"></button>
 <button onclick="decrement('b')" src="/assets/plus.png" type="button"><img src="/assets/minus.png" width="20" height="20"></button></br>
 
@@ -42,7 +43,7 @@ Passes (don't include the bar):<input type="number" name="passes" id="c">
 <button onclick="decrement('c')" src="/assets/plus.png" type="button"><img src="/assets/minus.png" width="20" height="20"></button></br>
 
 
-Recieved:<input type="number" name="recieved" id="d">
+Assists:<input type="number" name="recieved" id="d">
 <button onclick="increment('d')" src="/assets/plus.png" type="button"><img src="/assets/plus.png" width="20" height="20"></button>
 <button onclick="decrement('d')" src="/assets/plus.png" type="button"><img src="/assets/minus.png" width="20" height="20"></button></br>
 
@@ -108,8 +109,7 @@ function decrement(field){
 		document.getElementById(field).value=1;
 	}else{
 		var v=parseInt(s);
-		if(v>=1)
-		     v-=1;
+		v-=1;
 		document.getElementById(field).value=v;
 	}
 }

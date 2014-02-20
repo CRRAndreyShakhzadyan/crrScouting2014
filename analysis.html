@@ -1,0 +1,355 @@
+<html>
+<head>
+<title>Code Red Scouting</title>
+
+<link rel= "stylesheet" href="../css/default.css" type="text/css">
+<script type="text/javascript">
+var TICK_TIME=5;
+var MATCH_LENGTH=140;
+var NUM_DISPLAY=10;
+var robots;
+
+//INPUT FUNCTIONS \/
+
+function enter(e){//allows for the user to press the enter key instead of pressing "analyze"
+	var unicode=e.keyCode? e.keyCode : e.charCode;
+	if(unicode==13){
+		gatherData();
+	}
+}
+
+function gatherData(){//gathers information from the server
+	var teams=[];
+	var xmlhttp;
+	
+	MATCH_LENGTH=document.getElementById("a").value;
+	NUM_DISPLAY=document.getElementById("b").value;
+	
+	if (window.XMLHttpRequest){
+		xmlhttp=new XMLHttpRequest();
+	}else{
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	
+	xmlhttp.onreadystatechange=function(){
+		if (xmlhttp.readyState==4 && xmlhttp.status==200)
+		{
+			result=xmlhttp.responseText;
+			document.getElementById("output").innerHTML=result;
+			console.log("working...");
+			calculate(result);
+		}
+	}
+	
+	//document.write("/php/graph.php?team="+document.getElementById("t").value);
+	xmlhttp.open("GET","/php/analysis.php",true);
+	xmlhttp.send();
+}
+
+//ANALYSIS CLASSES \/
+
+//Robot is a class for storing robot info
+function Robot(team,defense,scoreProb,scoreVal,autonVal,toss,capture,drive,passSpeed){
+	this.team=team;
+	this.defense=defense;
+	this.scoreProb=scoreProb;
+	this.scoreVal=scoreVal;
+	this.autonVal=autonVal;
+	this.toss=toss;
+	this.capture=capture;
+	this.drive=drive;
+	this.passSpeed=passSpeed;
+	
+	//this.hasBall=true;
+	this.taskTime=-1;
+	this.task="";
+	
+	this.setTask=function(task){
+		this.task=task;
+		if(task.localeCompare("pass")==0 || task.localeCompare("shoot")==0)
+			this.taskTime=passSpeed;
+		else
+			this.taskTime=-1;
+	};
+	
+	this.pass=function(defense){
+		if(Math.random()<=scoreProb-defense/10){ //TODO?: use a better random number generator?
+			if(hasBall){//TODO?:change above, keep better track?
+				this.hasBall = false;
+				return true;
+			}
+		}
+		return false;
+	};
+	
+	//TODO:fix logic error
+	this.tick=function(defended){
+		if( (this.taskTime-TICK_TIME)>0 ){//if the robot still has to "wind up"
+			this.taskTime-=TICK_TIME;
+			return false;
+		}else{
+			if(this.task.localeCompare("pass")==0)
+				return pass(defended);
+			else if(this.task.localeCompare("shoot")==0)
+				return pass(defended);
+			else if(this.task.localeCompare("defend")==0)
+				return (Math.random()<.75);
+		}
+		//return false;
+	};
+}
+
+//Alliance is a class for storing 3 robots and processing them
+function Alliance(a,b,c){
+	this.a=a;
+	this.b=b;
+	this.c=c;
+	this.bots=[a,b,c];
+	
+	this.ballHeat=0;
+	this.score=0;
+	this.passes=0;
+	
+	this.wins=0;
+	this.matches=0;
+	
+	this.playAuton=function(){
+		this.score+=a.autonVal+b.autonVal+c.autonVal;
+	};
+	
+	this.pass=function(robot){
+		target=(robot+Math.floor(Math.random()*2+1))%3;
+		if(Math.random()<.3334 && robot.toss && bots[target].capture){
+			this.ballHeat+=20;
+			this.passes++;
+		} else {
+			this.ballHeat+=10;
+			this.passes++;
+		}
+		
+		if(passes>2)
+			this.bots[target].setTask('shoot');
+		else
+			this.bots[target].setTask('pass');
+	};
+	
+	this.tick=function(defended){
+		if(a.tick(defended)){
+			if(a.task.localeCompare("pass")==0){
+				pass(1);
+				this.a.setTask("defend");
+			} else if(a.task.localeCompare("shoot")){
+				this.score+=ballHeat;
+				this.bots[floor(Math.random()*bots.length)].setTask("pass");//reset everything for another cycle
+				this.ballHeat=0;
+				this.passes=0;
+			}
+		}
+		if(b.tick(defended)){
+			if(b.task.localeCompare("pass")==0){
+				this.pass(2);
+				this.b.setTask("defend");//once we are done this is aboot all we can do
+			} else if(b.task.localeCompare("shoot")){
+				this.score+=ballHeat;
+				this.bots[floor(Math.random()*bots.length)].setTask("pass");//reset everything for another cycle
+				this.ballHeat=0;
+				this.passes=0;
+			}
+		}
+		if(c.tick(defended)){
+			if(c.task.localeCompare("pass")==0){
+				this.pass(3);
+				this.c.setTask("defend");//once we are done this is aboot all we can do
+			} else if(c.task.localeCompare("shoot")){
+				this.score+=ballHeat;
+				this.bots[floor(Math.random()*bots.length)].setTask("pass");//reset everything for another cycle
+				this.ballHeat=0;
+				this.passes=0;
+			}
+		}
+	};
+	
+	this.getDefense=function(){
+		ret=0;
+		if(a.task.localeCompare("defend")==0)
+			ret+=this.a.defense/(140/TICK_TIME);//TODO: add random element
+		if(b.task.localeCompare("defend")==0)
+			ret+=this.b.defense/(140/TICK_TIME);//TODO: add random element
+		if(c.task.localeCompare("defend")==0)
+			ret+=this.c.defense/(140/TICK_TIME);//TODO: add random element
+		
+		return ret;
+	};
+	
+	this.win=function(won){
+		this.matches++;
+		if(won){
+			this.wins++;
+		}
+	};
+	
+	this.getWinR=function(){
+		return this.wins/this.matches;
+	};
+	
+	this.getInfo=function(){
+		return "<div class='floater'>teams: "+this.a.team+","+this.b.team+","+this.c.team+"</br>Simulated Stats:</br>win ratio:"+this.wins+"</br></div>";//TODO: add any relevant information if any
+	};
+}
+
+//ANALYSIS FUNCTIONS \/
+
+function playMatch(a,b){//returns true if a wins false if b wins
+	a.playAuton();
+	b.playAuton();
+	
+	timeLeft=MATCH_LENGTH;
+	
+	while(timeLeft>0){
+		a.tick(b.getDefense());
+		b.tick(a.getDefense());
+		timeLeft-=TICK_TIME;
+	}
+	
+	if(a.score>b.score)
+		return true;
+	else
+		return false;
+}
+
+function calculate(str){//actually finds the best alliance
+	var robots=createBots(str,0,-1);//TODO:make this section gather user input
+	var alls=createAlliances(robots);
+	
+	console.log("simulating matches");
+	for(var i=0;i<alls.length;i++){
+		for(var ii=i;ii<alls.length;ii++){
+			if(playMatch(alls[i],alls[ii])){
+				alls[i].win(true);
+				alls[ii].win(false);
+			}else{
+				alls[i].win(true);
+				alls[ii].win(false);
+			}
+		}
+	}
+	
+	console.log("sorting robots...");
+	sortByWinR(alls,0,alls.length-1);
+	//document.write(""+alls[alls.length-1].team);
+	//document.getElementById("output").innerHTML=alls[alls.length-1].team;
+	
+	document.getElementById("output").innerHTML="";
+	for(i=0;i<alls.length && i<NUM_DISPLAY;i++){
+		document.getElementById("output").innerHTML=document.getElementById("output").innerHTML+"</br>"+alls[i].getInfo();
+		//document.getElementById("output").innerHTML="test"+i;
+	}
+}
+
+function sortByWinR(alls,left,right){//Merge sort to sort by best win/loss ratio
+	function partition(arr,left,right,piv){
+		var val=arr[piv].getWinR();
+		var temp=arr[piv];
+		arr[piv]=arr[right];
+		arr[right]=temp;
+		
+		var storeInd=left;
+		for(var i=left;i<right;i++){
+			if(arr[i].getWinR()>val){
+				temp=arr[i];
+				arr[i]=arr[storeInd];
+				arr[storeInd]=temp;
+				storeInd++;
+			}
+		}
+		temp=arr[storeInd];
+		arr[storeInd]=arr[right];
+		arr[right]=temp;
+		return storeInd;
+	}
+	
+	if(left<right){
+		var pivInd=left+1;
+		var newInd=partition(alls,left,right,pivInd);
+		sortByWinR(alls,left,newInd-1);
+		sortByWinR(alls,newInd+1,right);
+	}
+}
+
+function createAlliances(bots){//Creates all of the possible permutations of alliances and returns the result
+	console.log("creaing alliances...");
+	
+	var ret= [];
+	for(var i=0;i<bots.length;i++){//TODO: check to see if right
+		for(var ii=i;ii<bots.length;ii++){
+			for(var iii=ii;iii<bots.length;iii++){//theoretically this goes through only alliances that don't exist
+				if(i!=ii && ii!=iii && i!=iii)
+					ret.push(new Alliance(bots[i],bots[ii],bots[iii]));
+			}
+		}
+	}
+	return ret;
+}
+
+//This function interprets the string from analysis.php and creates an array of robots
+//margin represents the minimum score the robot can recieve from one shot (no assists)
+//ignore represents a list of robots to ignore
+function createBots(bots,margin,ignore){
+	//document.getElementById("output").innerHTML=document.getElementById("output").innerHTML+"</br>creating robots...";
+	console.log("creating robots...");
+	var ret= [];
+	var i=0;
+	var valid=true;
+	
+	while(!(bots.indexOf(";")==-1)){
+		//var str=bots.substring(1,bots.indexOf(';'));
+		var str=bots;
+		var team=parseInt( str.substring(0,str.indexOf(':')) );
+		str=str.substring(str.indexOf(','));
+		var defense=parseInt( str.substring(1,str.indexOf(',')) );
+		str=str.substring(str.indexOf(','));
+		var scoreProb=parseInt( str.substring(1,str.indexOf(',')) );
+		str=str.substring(str.indexOf(','));
+		var scoreVal=parseInt( str.substring(1,str.indexOf(',')) );
+		str=str.substring(str.indexOf(','));
+		var autonVal=parseInt( str.substring(1,str.indexOf(',')) );
+		str=str.substring(str.indexOf(','));
+		var toss=parseInt( str.substring(1,str.indexOf(',')) );
+		str=str.substring(str.indexOf(','));
+		var capture=parseInt( str.substring(1,str.indexOf(',')) );
+		str=str.substring(str.indexOf(','));
+		var drive=parseInt( str.substring(1,str.indexOf(';')) );
+		
+		/*valid=true;
+		for(i=0;i<ignore.length;i++){
+			if(team==ignore[i] || scoreVal<margin)
+				valid=false;
+		}*/
+		if(valid){
+			ret.push(new Robot(team,defense,scoreProb,scoreVal,autonVal,toss,capture,drive));
+		}
+		
+		console.log(bots);
+		console.log( bots.substring(1).substring(bots.substring(1).indexOf(";")+1) );
+		bots=bots.substring(1).substring(bots.substring(1).indexOf(";")+1);
+	}
+	return ret;
+}
+</script>
+</head>
+<body>
+<div class= "formb1">
+	
+<a href="index.html"><img src="assets/Scouting4.png" alt="Scouting4.png" width="639" height="200"></a>
+
+<h1>Analysis</h1>
+
+<!--<form>-->
+Time for ticks (lower values will be more accurate but slower):<input type="number" name="team" id="a" value="5" onkeypress="enter(event)"> </br>
+Maximum number of alliances displayed:<input type="number" name="team" id="b" value="10" onkeypress="enter(event)"> </br>
+<button type="button" onClick="gatherData()">analyze</button>
+<!--</form>-->
+<div id="output"></div>
+</body>
+</div>
+</html>

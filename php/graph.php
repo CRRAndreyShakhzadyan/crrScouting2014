@@ -24,14 +24,13 @@ $result=mysqli_query($con,"SELECT * FROM robot_data WHERE team=".$team);
 //$print="<table class='display'><tr> <th>team</th> <th>drive train</th> <th>passing/scoring mechanism</th> <th>catching mechanism</th> <th>defensive capabilities</th></tr>";
 $print="";
 while($row = mysqli_fetch_array($result)){
-	$print=$print."<object data='../graphs/team639.jpg'><object data='../graphs/team".$team.".jpeg'><img src='../assets/default.png'></img></object></object>".
-	"</br>type:".$row['drive_type']." speed:".$row['drive_speed']." pushiness:".$row['drive_push'].
-	"</br>pass method:".$row['pass_method']." compatability:".$row['pass_comp'].
-	"</br>catcher:".$row['catcher']." truss catcher".$row['truss_catch'].
-	"</br>block ability:".$row['block_ability']." block type:".$row['block_mech']."</td></tr></br>";//TODO:check over everything here and make sure columns correspond
+	$print=$print."<h2>".$row['team']."</h2><object data='../graphs/team".$row['team'].".jpg'><object data='../graphs/team".$row['team'].".jpeg'><img src='../assets/default.png'></img></object></object>".
+	"</br><h3>Drive Train:</h3>".$row['drive'].
+	"<h3>Passing/Scoring:</h3>".$row['pass'].
+	"<h3>Catcher:</h3>".($row['catcher']==1 ? ($row['truss_catch']==1 ? "can catch from truss" : "cannot catch from truss") : "cannot catch").
+	"<h3>Defensive Capability:</h3>".$row['block']."</br>";//ODO:check over everything here and make sure columns correspond
 }
-$print=$print."</table>";
-echo $print;
+echo $print."</br><h1>Graphs of Performance:</h1>";
 
 
 //Gather the actual data FOR MATCHES
@@ -88,7 +87,7 @@ for($i=0;$i<sizeof($avg);$i++){
 	$avg[$i]/=$iterations;
 }
 
-$graph=new RadarGraph(400,400);
+$graph=new RadarGraph(500,500);
 $graph->SetScale("lin");
 $graph->title->Set("Individual Performance vs Avg");
 $graph->SetTitles($titles);
@@ -107,6 +106,7 @@ $graph->Add($plotA);
  
 // and display the graph
 $graph->legend->SetPos(.1,.9,'left','top');
+$graph->img->SetAntiAliasing();
 //$graph->Stroke();
 $adress="../graphs/radar.png";
 unlink($adress);
@@ -145,8 +145,8 @@ while($row = mysqli_fetch_array($result)){
 
 //printing the line graphs
 for($i=0;$i<sizeof($stats);$i++){
-	$graph=new Graph(400,400);
-	$graph->SetScale("linlin");
+	$graph=new Graph(500,400);
+	$graph->SetScale("intlin");
 	$graph->title->Set($titles[$i]);
 
 	$plot=new LinePlot($stats[$i]);
@@ -157,10 +157,11 @@ for($i=0;$i<sizeof($stats);$i++){
  
 	// and display the graph
 	$graph->legend->hide();
-	//$graph->Stroke();
+	$graph->img->SetAntiAliasing();
 	$adress="../graphs/".$titles[$i].".png";
 	unlink($adress);
 	$graph->Stroke($adress);
-	echo "<img src='".$adress."'></img></br></br>";
+	
+	echo "<img class='graph' src='".$adress."' />";
 }
 ?>
