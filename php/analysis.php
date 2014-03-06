@@ -21,7 +21,7 @@ while($row = mysqli_fetch_array($result)){
 			break;
 		}
 	}
-			
+	
 	if($found){
 		if($row['bar_toss']>0)
 			$toss=true;
@@ -71,29 +71,28 @@ while($row = mysqli_fetch_array($result)){
 		
 		array_push( $teams,array($row['team'],$row['defense'],$row['goal_high']+$row['goal_low'],$row['missed'],1,$score,$autonScore,$toss,$catch,$drive) );
 		
-		$toss=false; $catch=false; $drive=false; $score=0;
+		$toss=false; $catch=false; $drive=false; $score=0; $autonScore=0;
 	}
 }
 	
 for($i=0;$i<sizeof($teams);$i++){
-	$teams[$i][1]/=$teams[$i][4];
-	$teams[$i][2]/=$teams[$i][3];
+	$teams[$i][2]/=$teams[$i][5];
+	$teams[$i][3]/=$teams[$i][4];
 }
 
-//Gather the actual data FOR MATCHES
+//Gather the actual data FOR ROBOTS
 $result=mysqli_query($con,"SELECT * FROM robot_data");
 while($row = mysqli_fetch_array($result)){
 	for($i=0;$i<sizeof($teams);$i++){
 		if($row['team']==$teams[$i][0]){
-			$found=true;
-			break;
+			array_push($teams[$i],$row['shoot_time']);
 		}
 	}
 }
 
 $print="";
 for($i=0;$i<sizeof($teams);$i++){
-	$print=$print.$teams[$i][0].":".$teams[$i][1].",".$teams[$i][2].",".$teams[$i][5].",".$teams[$i][6].",".$teams[$i][7].",".$teams[$i][8].",".$teams[$i][9].";";
+	$print=$print.$teams[$i][0].":".$teams[$i][1].",".$teams[$i][2].",".$teams[$i][5].",".$teams[$i][6].",".$teams[$i][7].",".$teams[$i][8].",".$teams[$i][9].",".$teams[$i][10].";";
 }
 echo $print;
 ?>

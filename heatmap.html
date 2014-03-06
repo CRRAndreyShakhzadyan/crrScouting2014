@@ -1,0 +1,299 @@
+<html>
+<head>
+<title>Code Red Scouting</title>
+
+<link rel= "stylesheet" href="../css/default.css" type="text/css">
+<img src="/assets/field.png" height="0" width="0" id="bgimg"></img>
+</head>
+<div class= "formb1">
+	
+<a href="index.html"><img src="assets/Scouting4.png" alt="Scouting4.png" width="639" height="200"></a>
+<body>
+</br><h>Match State: </h> <h id="state">NOT IN PROGRESS</h>
+</br>
+<span>Time: </span> <span id="matchTime"> 0 </span></br>
+<button type="button" onclick="reset()">Reset</button>
+<button type="button" onclick="printCoor()">Print</button></br></br>
+
+<canvas id="map" width="1042" height="581" style="border:1px solid #d3d3d3" onmousedown="mark()">Your browser does not support the HTML5 canvas tag.</canvas>
+</br> 
+<h>Mode:</h>
+<form action ="" id="mode" onclick="updateMode()"> 
+	Score:<input type="radio" name="mode"  value="s" checked>
+	Defense:<input type="radio" name="mode" value="d" >
+	Pass:<input type="radio" name="mode"  value="p">
+	Catch:<input type="radio" name="mode" value="c">
+	Miss:<input type="radio" name="mode" value="m">
+</form></br>
+
+Team number:<input type="number" name="team" id="t"> </br>
+<button type="button" onClick="submit()">submit</button>
+<div id="server_response"></div>
+
+<script src="http://www.openjs.com/scripts/events/keyboard_shortcuts/shortcut.js" type="text/javascript"></script>
+<script>
+var initd = 0; // 0: not started, 1: running, 2: match over
+var matchState = document.getElementById("state");
+var matchTimer;
+var timeUpdater;
+var time = 0;
+var mode = document.getElementById("mode");
+var modeInd = 0;
+var modes = {SCORE : 0, DEFENSE : 1, PASS : 2, CAT : 3, MISS : 4, UP : 5, DOWN : 6};
+var markColors = ["#00FF00", "#C0C0C0","#8888FF","FF9933", "#FF0000"];
+
+var map = document.getElementById("map");
+var cxt = map.getContext("2d");
+
+var bBox = map.getBoundingClientRect();
+var LIMITS = [150, 895, 166, 510]; //x min, x max, y min, y max
+var BUTTON_X_LOCS = [376,450,524,598,672];//the location of the centers of each button
+var BUTTON_LABLES = ["Goal","Defense","Pass","Catch","Miss"];
+var BUTTON_Y_LOCS = 40;//all buttons are the on the same y location
+var BUTTON_SIZE = [72,48];//all buttons are the same size, ind 0 is x size and ind 1 is y size
+
+var bg_img = document.getElementById("bgimg");
+cxt.clearRect(0,0,1042, 581);
+cxt.drawImage(bg_img, 1, 1);
+cxt.textAlign="center";
+cxt.font="18pt cabin";
+for(var i=0;i<BUTTON_X_LOCS.length;i++){
+	cxt.fillStyle="#DD0000";
+	cxt.fillRect(BUTTON_X_LOCS[i]-BUTTON_SIZE[0]/2, BUTTON_Y_LOCS-BUTTON_SIZE[1]/2, BUTTON_SIZE[0], BUTTON_SIZE[1]);
+	cxt.fillStyle="black";
+	cxt.font="12pt cabin";
+	cxt.fillText(BUTTON_LABLES[i],BUTTON_X_LOCS[i],BUTTON_Y_LOCS+3);
+}
+
+var startPos=[];
+var coor = []; //coordinates for teleop shots and misses(-x)
+var dCoor = []; //coordinates for defensive actions
+var pCoor = []; //coor for passes and catches(-x)
+
+//adds coordinate to the coordinate storage array
+//Location stored as fraction of width/height to make resolution independent
+//Origin is top left corner.
+function addCoor(x, y){//@ CONNER: I CHANGED SOME THINGS MOSTLY COMBINING METHODS THAT SEEMED REDUNDANDT
+	x1 = (x/map.width);
+	y1 = (y/map.height);
+	if(!unbounded(x,y) && modeInd==modes.SCORE || modeInd==modes.MISS){
+		coor.push(x1);
+		coor.push(y1);
+		coor.push(time);
+	}else if(!unbounded(x,y) && modeInd==modes.PASS || modeInd==modes.PASS){
+		pCoor.push(x1);
+		pCoor.push(y1);
+		pCoor.push(time);
+	}else if(!unbounded(x,y) && modeInd==modes.DEFENSE){
+		dCoor.push(x1);
+		dCoor.push(y1);
+		dCoor.push(time);
+	}
+	
+	//var color = markColors[modeInd];
+	cxt.beginPath();
+	cxt.lineWidth = "1";
+	cxt.strokeStyle = markColors[modeInd];
+	cxt.rect(x,y, 5, 5);
+	cxt.stroke();
+}
+
+//checks if coordinate valid
+function unbounded(x,y){
+	return (x < LIMITS[0] || x > LIMITS[1] || y < LIMITS[2] || y > LIMITS[3]);
+}
+
+//returns whatever button was pressed
+function getButtonPressed(x,y){
+	for(var i=0;i<BUTTON_X_LOCS.length;i++){
+		if(x>BUTTON_X_LOCS[i]-BUTTON_SIZE[0]/2 && x<BUTTON_X_LOCS[i]+BUTTON_SIZE[0]/2 && y>BUTTON_Y_LOCS-BUTTON_SIZE[1]/2 && y<BUTTON_Y_LOCS+BUTTON_SIZE[1]/2)//if x and y are inside of the button
+			return i;
+	}
+	return -1;
+}
+
+//changes the mode when key pressed
+//m mode to change to
+function changeMode(m){
+	for(var i = 0; i < mode.mode.length; i++){
+		mode.mode[i].checked=false;
+	}
+	if(m==5 && modeInd>0){
+		modeInd--;
+		mode.mode[modeInd].checked=true;
+	}else if(m==6 && modeInd<4){
+		modeInd++;
+		mode.mode[modeInd].checked=true;
+	}else{
+		modeInd = m;
+		mode.mode[m].checked=true;
+	}
+}
+
+//Draw small yellow circle for start point
+function drawStartPoint(x,y){
+	/*var e = window.event;
+	var x = e.clientX - bBox.left;
+	var y = e.clientY - bBox.top;*/
+	if(!unbounded(x,y)){
+		init();
+		startPos.push(x/map.width);
+		startPos.push(y/map.height);
+		
+		cxt.beginPath();
+		cxt.lineWidth="1";
+		cxt.strokeStyle = "#FFFF00";
+		cxt.arc(x, y, 4, 0, 2*Math.PI);
+		cxt.stroke();
+	}
+}
+
+//initialize things
+function init(){
+	initd = 1;
+	changeMode(modes.SCORE);
+	matchState.innerHTML = "AUTO";
+	matchTimer = setTimeout(function(){matchState.innerHTML = "TELEOP"}, 10000);
+	timeUpdater = setInterval(function(){updateTime()}, 1000);
+	//initKeys();
+}
+
+//Add hotkeys to change modes: S=score, D=defense, W=miss, A=Pass, E=catch
+//This function is called at init()
+document.onkeydown=function(){
+	//TODO:use document.activeElement;
+	var e = window.event;
+	var unicode=e.keyCode? e.keyCode : e.charCode;
+	console.log("chuck testa:"+unicode);
+	if(unicode==68){//d key
+		//alert("chuck");
+		//document.getElementById("images").innerHTML=phpGET("/php/graph.php",new array,("team"),new array(document.getElementById("t").value));
+		changeMode(modes.DEFENSE);
+	}else if(unicode==83){//s key
+		changeMode(modes.SCORE)
+	}else if(unicode==65){//e key
+		changeMode(modes.PASS);
+	}
+}
+
+//make mark on canvas
+function mark(){
+	bBox = map.getBoundingClientRect();
+	
+	var e = window.event;
+	var x = e.clientX - bBox.left;
+	var y = e.clientY - bBox.top;
+	
+	if (initd == 1){
+		if(!unbounded(x,y)){
+			addCoor(x,y);
+		}
+	}else if(initd == 0){
+		drawStartPoint(x,y);
+	}else{
+		alert('Please reset match');
+	}
+	
+	if(unbounded(x,y)){
+		if(getButtonPressed(x,y)!=-1){
+			modeInd = getButtonPressed(x,y);
+			mode.mode[modeInd].checked=true;
+		}
+	}
+}
+
+//end match
+function matchEnd(){
+	initd = 2;
+	matchState.innerHTML = "MATCH OVER";
+	clearTimeout(matchTimer);
+	clearInterval(timeUpdater);
+}
+
+//TESTING FUNCTION: prints coordinates stored in coor
+function printCoor(){
+	for(var i = 0; i < coor.length; i+=3){
+		document.write("(" + Math.round(coor[i]*map.width) + ", "
+			       	+ Math.round(coor[i+1]*map.height) + ", "
+				+ coor[i+2] + ")");
+		document.write("<br>");
+	}
+}
+
+//clears all marks and clears coordinate storage
+function reset(){
+	cxt.clearRect(0,0,1042, 581);
+	cxt.drawImage(bg_img, 1, 1);
+	coor = [];
+	
+	for(var i=0;i<BUTTON_X_LOCS.length;i++){
+		cxt.fillStyle="#DD0000";
+		cxt.fillRect(BUTTON_X_LOCS[i]-BUTTON_SIZE[0]/2, BUTTON_Y_LOCS-BUTTON_SIZE[1]/2, BUTTON_SIZE[0], BUTTON_SIZE[1]);
+		cxt.fillStyle="black";
+		cxt.fillText(BUTTON_LABLES[i],BUTTON_X_LOCS[i],BUTTON_Y_LOCS+3);//That magic number just adjusts the text's vertical position, it isn't a magic number if I describe it in the comments right?
+	}
+	
+	initd = 0;
+	clearTimeout(matchTimer);
+	clearInterval(timeUpdater);
+	matchState.innerHTML = "NOT IN PROGRESS";
+	time = -1;
+	timeBackup = -1;
+	updateTime();
+}
+
+//updates the click mode
+function updateMode(){
+	for(var i = 0; i < mode.mode.length; i++)
+		if(mode.mode[i].checked){
+			modeInd = i;
+			break;
+		}
+}
+	
+//update match timer
+function updateTime(){
+	if(time == 150){
+		matchEnd();
+	}else{
+		time += 1;
+		timeDisp = document.getElementById("matchTime");
+		timeDisp.innerHTML = time;
+	}
+}
+
+//gets parameters puts them in a nice array and returns the result
+//arr = the array to parse into a string of csv
+function getCSVString(arr){
+	var ret="";
+	for(var i=0;i<arr.length;i++){
+		ret=ret+","+arr[i];
+	}
+	return ret;
+}
+
+//calls php and submits the heatmap information
+function submit(){
+	var xmlhttp;
+	
+	if(window.XMLHttpRequest){
+		xmlhttp=new XMLHttpRequest();
+	}else{
+		xmlhttp=ActiveXObject("Microsoft.XMLHTTP");
+	}
+	
+	xmlhttp.onreadystatechange=function(){
+		if(xmlhttp.readyState==4 && xmlhttp.status==200){
+			document.getElementById("server_response").innerHTML=xmlhttp.responseText;
+		}
+	}
+	var parameters="team="+document.getElementById('t').value+"&startPosition="+getCSVString(startPos)+
+	"&score="+getCSVString(coor)+"&pass="+getCSVString(pCoor)+"&defend="+getCSVString(dCoor);
+	xmlhttp.open("POST","/php/heatmap_submit.php",true);
+	xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xmlhttp.send(parameters);
+}
+</script>
+</body>
+</div>
+</html>

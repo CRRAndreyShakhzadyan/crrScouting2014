@@ -1,0 +1,141 @@
+<html>
+<head>
+<title>Code Red Scouting</title>
+
+<link rel= "stylesheet" href="../css/default.css" type="text/css">
+<img src="/assets/field.png" height="0" width="0" id="bgimg"></img>
+</head>
+<div class= "formb1">
+
+<a href="index.html"><img src="assets/Scouting4.png" alt="Scouting4.png" width="639" height="200"></a>
+<body>
+</br><h>Match State: </h> <h id="state">NOT IN PROGRESS</h>
+</br>
+
+<canvas id="map" width="1042" height="581" style="border:1px solid #d3d3d3">Your browser does not support the HTML5 canvas tag.</canvas>
+</br>
+
+Team number:<input type="number" name="team" id="t" onkeypress="enter(event)"> </br>
+<button type="button" onClick="load()">submit</button>
+<div id="server_response"></div>
+<script>
+var map=document.getElementById("map");
+var cxt=map.getContext("2d");
+
+//only draw the image on the canvas if it has actually been loaded
+document.getElementById("bgimg").onload=function(){
+	var bg_img = document.getElementById("bgimg");
+	cxt.drawImage(bg_img, 1, 1);
+	cxt.textAlign="center";
+	cxt.font="18pt cabin";
+}
+
+var startPos=[];
+var coor = []; //coordinates for teleop shots and misses(-x)
+var dCoor = []; //coordinates for defensive actions
+var pCoor = []; //coor for passes and catches(-x)
+
+var markColors = ["#00FF00", "#C0C0C0","#8888FF","FF9933", "#FF0000"];
+
+function enter(e){
+	var unicode=e.keyCode? e.keyCode : e.charCode;
+	if(unicode==13){
+		load();
+	}
+}
+
+function draw(){
+	cxt.beginPath();
+	cxt.lineWidth = "1";
+	cxt.strokeStyle = "#AD0000";
+	cxt.rect(startPos[0],startPos[1], 5, 5);
+	cxt.stroke();
+	
+	cxt.fillStyle="black";
+	cxt.font="12pt cabin";
+	
+	for(i=0;i<coor.length-2;i+=3){
+		cxt.beginPath();
+		cxt.lineWidth = "1";
+		cxt.strokeStyle = markColors[0];
+		cxt.rect(coor[i]*map.width,coor[i+1]*map.height, 5, 5);
+		
+		cxt.fillText(coor[i+2],coor[i]*map.width,coor[i+1]*map.height);
+		cxt.stroke();
+	}
+	
+	for(i=0;i<dCoor.length-2;i+=3){
+		cxt.beginPath();
+		cxt.lineWidth = "1";
+		cxt.strokeStyle = markColors[1];
+		cxt.rect(dCoor[i]*map.width,dCoor[i+1]*map.height, 5, 5);
+		
+		cxt.fillText(dCoor[i+2],dCoor[i]*map.width,dCoor[i+1]*map.height);
+		cxt.stroke();
+	}
+	
+	for(i=0;i<pCoor.length-2;i+=3){
+		cxt.beginPath();
+		cxt.lineWidth = "1";
+		cxt.strokeStyle = markColors[2];
+		cxt.rect(pCoor[i]*map.width,pCoor[i+1]*map.height, 5, 5);
+		
+		cxt.fillText(pCoor[i+2],pCoor[i]*map.width,pCoor[i+1]*map.height);
+		cxt.stroke();
+	}
+}
+
+function load()
+{
+	var xmlhttp;
+	
+	if (window.XMLHttpRequest){
+		xmlhttp=new XMLHttpRequest();
+	}else{
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	
+	xmlhttp.onreadystatechange=function(){
+		if (xmlhttp.readyState==4 && xmlhttp.status==200)
+		{
+			process(xmlhttp.responseText);
+		}
+	}
+	//document.write("/php/graph.php?team="+document.getElementById("t").value);
+	xmlhttp.open("GET","/php/heatmap_view.php?team="+document.getElementById("t").value,true);
+	xmlhttp.send();
+	//alert("steve");
+}
+
+function process(info){
+	startPos.push(info.substring(0,info.indexOf(",")));
+	info=info.substring(info.indexOf(",")+1);
+	startPos.push(info.substring(0,info.indexOf(";")));
+	info=info.substring(info.indexOf(";")+1);
+	
+	var str=info.substring(0,info.indexOf(";")+1);
+	while(!(str.indexOf(",")==-1)){
+		coor.push(str.substring(0,str.indexOf(",")));
+		str=str.substring(str.indexOf(",")+1);
+	}
+	coor.push(str.substring(0,str.indexOf(";")));
+	info=info.substring(info.indexOf(";")+1);
+	
+	var str=info.substring(0,info.indexOf(";")+1);
+	while(!(str.indexOf(",")==-1)){
+		dCoor.push(str.substring(0,str.indexOf(",")));
+		str=str.substring(str.indexOf(",")+1);
+	}
+	dCoor.push(str.substring(0,str.indexOf(";")));
+	info=info.substring(info.indexOf(";")+1);
+	
+	var str=info.substring(0,info.indexOf(";")+1);
+	while(!(str.indexOf(",")==-1)){
+		pCoor.push(str.substring(0,str.indexOf(",")));
+		str=str.substring(str.indexOf(",")+1);
+	}
+	pCoor.push(str.substring(0,str.indexOf(";")));
+	
+	draw();
+}
+</script>

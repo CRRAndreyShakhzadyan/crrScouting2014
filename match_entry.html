@@ -16,6 +16,7 @@
 </p>
 
 <form action="php/match_entry.php" method="post">
+<div class=>
 Match number:<input type="number" name="match"> </br>
 Team number:<input type="number" name="team"> </br>
 </br>
@@ -31,54 +32,54 @@ Drove forward:<input type="checkbox" name="drove_auton" value="drove"></br>
 <h3>Main game:</br></h3>
 
 Passes Over Truss:<input type="number" name="bar_toss" id="a">
-<button onclick="increment('a')" src="/assets/plus.png" type="button"><img src="/assets/plus.png" width="20" height="20"></button>
-<button onclick="decrement('a')" src="/assets/plus.png" type="button"><img src="/assets/minus.png" width="20" height="20"></button></br>
+<button onclick="increment('a')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/plus.png" width="20" height="20"></button>
+<button onclick="decrement('a')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/minus.png" width="20" height="20"></button></br>
 
 Catches From Truss:<input type="number" name="bar_catch" id="b">
-<button onclick="increment('b')" src="/assets/plus.png" type="button"><img src="/assets/plus.png" width="20" height="20"></button>
-<button onclick="decrement('b')" src="/assets/plus.png" type="button"><img src="/assets/minus.png" width="20" height="20"></button></br>
+<button onclick="increment('b')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/plus.png" width="20" height="20"></button>
+<button onclick="decrement('b')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/minus.png" width="20" height="20"></button></br>
 
 Passes (don't include the bar):<input type="number" name="passes" id="c">
-<button onclick="increment('c')" src="/assets/plus.png" type="button"><img src="/assets/plus.png" width="20" height="20"></button>
-<button onclick="decrement('c')" src="/assets/plus.png" type="button"><img src="/assets/minus.png" width="20" height="20"></button></br>
+<button onclick="increment('c')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/plus.png" width="20" height="20"></button>
+<button onclick="decrement('c')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/minus.png" width="20" height="20"></button></br>
 
 
 Assists:<input type="number" name="recieved" id="d">
-<button onclick="increment('d')" src="/assets/plus.png" type="button"><img src="/assets/plus.png" width="20" height="20"></button>
-<button onclick="decrement('d')" src="/assets/plus.png" type="button"><img src="/assets/minus.png" width="20" height="20"></button></br>
+<button onclick="increment('d')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/plus.png" width="20" height="20"></button>
+<button onclick="decrement('d')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/minus.png" width="20" height="20"></button></br>
 
 
 High goals:<input type="number" name="goal_high" id="e">
-<button onclick="increment('e')" src="/assets/plus.png" type="button"><img src="/assets/plus.png" width="20" height="20"></button>
-<button onclick="decrement('e')" src="/assets/plus.png" type="button"><img src="/assets/minus.png" width="20" height="20"></button></br>
+<button onclick="increment('e')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/plus.png" width="20" height="20"></button>
+<button onclick="decrement('e')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/minus.png" width="20" height="20"></button></br>
 
 
 Low goals:<input type="number" name="goal_low" id="f">
-<button onclick="increment('f')" src="/assets/plus.png" type="button"><img src="/assets/plus.png" width="20" height="20"></button>
-<button onclick="decrement('f')" src="/assets/plus.png" type="button"><img src="/assets/minus.png" width="20" height="20"></button></br>
+<button onclick="increment('f')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/plus.png" width="20" height="20"></button>
+<button onclick="decrement('f')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/minus.png" width="20" height="20"></button></br>
 
 
 Missed goals:<input type="number" name="missed" id="g">
-<button onclick="increment('g')" src="/assets/plus.png" type="button"><img src="/assets/plus.png" width="20" height="20"></button>
-<button onclick="decrement('g')" src="/assets/plus.png" type="button"><img src="/assets/minus.png" width="20" height="20"></button></br>
+<button onclick="increment('g')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/plus.png" width="20" height="20"></button>
+<button onclick="decrement('g')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/minus.png" width="20" height="20"></button></br>
 
 
 Estimated points defended:<input type="number" name="defense"></br>
 
 
 Balls Killed:<input type="number" name="killed" id="h">
-<button onclick="increment('h')" src="/assets/plus.png" type="button"><img src="/assets/plus.png" width="20" height="20"></button>
-<button onclick="decrement('h')" src="/assets/plus.png" type="button"><img src="/assets/minus.png" width="20" height="20"></button></br>
+<button onclick="increment('h')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/plus.png" width="20" height="20"></button>
+<button onclick="decrement('h')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/minus.png" width="20" height="20"></button></br>
 
 
 Fouls:<input type = "number" name = "fouls" id="i">
-<button onclick="increment('i')" src="/assets/plus.png" type="button"><img src="/assets/plus.png" width="20" height="20"></button>
-<button onclick="decrement('i')" src="/assets/plus.png" type="button"><img src="/assets/minus.png" width="20" height="20"></button></br>
+<button onclick="increment('i')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/plus.png" width="20" height="20"></button>
+<button onclick="decrement('i')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/minus.png" width="20" height="20"></button></br>
 
 
 Technical Fouls:<input type = "number" name = "tech_fouls" id="j">
-<button onclick="increment('j')" src="/assets/plus.png" type="button"><img src="/assets/plus.png" width="20" height="20"></button>
-<button onclick="decrement('j')" src="/assets/plus.png" type="button"><img src="/assets/minus.png" width="20" height="20"></button></br>
+<button onclick="increment('j')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/plus.png" width="20" height="20"></button>
+<button onclick="decrement('j')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/minus.png" width="20" height="20"></button></br>
 
 </br>
 Won:<input type="radio" name="won" value="won"></br>

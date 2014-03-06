@@ -1,0 +1,296 @@
+<html>
+<body>
+<img src="http://frc-manual.usfirst.org/upload/images/2014/1/Figure2-3.jpg" height="0" width="0" id="bgimg"></img>
+
+<h>Match State:  </h> <h id="state">NOT IN PROGRESS</h>
+</br>
+<span>Time: </span> <span id="matchTime"> 0 </span>
+<button type="button" onclick="reset()">Reset</button>
+<!--BUTTON FOR TESTING <button type="button" onclick="printCoor()">Print</button>-->
+<button type="button" onclick="printCoor()">Print</button></br>
+
+<canvas id="map" width="1042" height="581" style="border:1px solid #d3d3d3" onmousedown="mark()">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+</br> 
+<h>Mode:</h>
+<form action ="" id="mode" onclick="updateMode()"> 
+	Score:<input type="radio" name="mode"  value="s" checked>
+	Defense:<input type="radio" name="mode" value="d" >
+	Pass:<input type="radio" name="mode"  value="p">
+	Catch:<input type="radio" name="mode" value="c">
+	Miss:<input type="radio" name="mode" value="m">
+</form>
+
+<script src="http://www.openjs.com/scripts/events/keyboard_shortcuts/shortcut.js" type="text/javascript"></script>
+<script>
+var initd = 0; // 0: not started, 1: running, 2: match over
+var matchState = document.getElementById("state");
+var matchTimer;
+var timeUpdater;
+var time = 0;
+var mode = document.getElementById("mode");
+var modeInd = 0;
+var modes = {SCORE : 0, DEFENSE : 1, PASS : 2, CAT : 3, MISS : 4, UP : 5, DOWN : 6};
+var markColors = ["#00FF00", "#C0C0C0","#8888FF","FF9933", "#FF0000"];
+
+var map = document.getElementById("map");
+var cxt = map.getContext("2d");
+var bg_img = document.getElementById("bgimg");
+cxt.drawImage(bg_img, 1, 1);
+var bBox = map.getBoundingClientRect();
+var limits = [150, 895, 166, 510]; //x min, x max, y min, y max
+ 
+var coor = []; //coordinates for teleop shots and misses(-x)
+var coorInd = 0; //number of coordinates
+
+var dCoor = []; //coordinates for defensive actions
+var dCoorInd = 0;
+
+var pCoor = []; //coor for passes and catches(-x)
+var pCoorInd = 0;
+
+
+//See addCoor()
+function addPCoor(x, y){
+	x1 = (x/map.width);
+	y1 = (y/map.height);
+	pCoor.push(x1);
+	pCoor.push(y1);
+	pCoor.push(time);
+}
+
+//adds coordinate to the coordinate storage array
+//Location stored as fraction of width/height to make resolution independent
+//Origin is top left corner.
+function addCoor(x, y){
+	x1 = (x/map.width);
+	y1 = (y/map.height);
+	coor.push(x1);
+	coor.push(y1);
+	coor.push(time);
+	coorInd++;
+}
+
+//See addCoor()
+function addDCoor(x, y){
+	x1 = (x/map.width);
+	y1 = (y/map.height);
+	dCoor.push(x1);
+	dCoor.push(y1);
+	dCoor.push(time);
+	dCoorInd++;
+}
+
+//See addCoor()
+function addPCoor(x, y){
+	x1 = (x/map.width);
+	y1 = (y/map.height);
+	pCoor.push(x1);
+	pCoor.push(y1);
+	pCoor.push(time);
+	pCoorInd++;
+}
+
+//checks if coordinate valid
+function unbounded(x,y){
+	return (x < limits[0] || x > limits[1] || y < limits[2] || y > limits[3]);
+}
+
+//changes the mode when key pressed
+//m mode to change to
+function changeMode(m){
+	for(var i = 0; i < mode.mode.length; i+=1){
+		mode.mode[i].checked=false;
+	}
+	if(m==5 && modeInd>0){
+		modeInd--;
+		mode.mode[modeInd].checked=true;
+	}else if(m==6 && modeInd<4){
+		modeInd++;
+		mode.mode[modeInd].checked=true;
+	}else{
+		modeInd = m;
+		mode.mode[m].checked=true;
+	}
+}
+
+
+//draws mark for where robot defending
+function drawDefense(){
+	var e = window.event;
+	var x = e.clientX - bBox.left;
+	var y = e.clientY - bBox.top;
+	if(!unbounded(x,y)){
+		addDCoor(x,y);
+
+		cxt.beginPath();
+		cxt.lineWidth="1";
+		cxt.strokeStyle = markColors[modeInd];
+		cxt.arc(x, y, 4, 0, 2*Math.PI);
+		cxt.stroke();
+	}
+}
+
+//see drawShot()
+function drawPass(){
+	var e = window.event;
+	var x = e.clientX - bBox.left;
+	var y = e.clientY - bBox.top;
+	if(!unbounded(x,y)){
+		var color = markColors[modeInd]
+
+		if(modeInd == modes.PASS)
+			addPCoor(x, y);
+		else
+			addPCoor(-1*x, y);
+
+		cxt.beginPath();
+		cxt.lineWidth = "1";
+		cxt.strokeStyle = color;
+		cxt.rect(x,y, 5, 5);
+		cxt.stroke();
+	}
+}
+
+//draws small rectangle to indicate robot position
+//Firefox seems to throw some sort of error when using event.pageX
+function drawShot(){
+	var e = window.event;
+	var x = e.clientX - bBox.left;
+	var y = e.clientY - bBox.top;
+	if(!unbounded(x,y))	{
+		var color = markColors[modeInd];
+	
+		if(modeInd == modes.SCORE)
+			addCoor(x, y);
+		else
+			addCoor(-1*x, y);
+	
+		cxt.beginPath();
+		cxt.lineWidth = "1";
+		cxt.strokeStyle = color;
+		cxt.rect(x,y, 5, 5);
+		cxt.stroke();
+	}
+}
+
+//Draw small yellow circle for start point
+function drawStartPoint(){
+	var e = window.event;
+	var x = e.clientX - bBox.left;
+	var y = e.clientY - bBox.top;
+	if(!unbounded(x,y)){
+		init();
+		addCoor(x,y);
+	
+		cxt.beginPath();
+		cxt.lineWidth="1";
+		cxt.strokeStyle = "#FFFF00";
+		cxt.arc(x, y, 4, 0, 2*Math.PI);
+		cxt.stroke();
+	}
+}
+
+//initialize things
+function init(){
+	initd = 1;
+	changeMode(modes.SCORE);
+	matchState.innerHTML = "AUTO";
+	matchTimer = setTimeout(function(){matchState.innerHTML = "TELEOP"}, 10000);
+	timeUpdater = setInterval(function(){updateTime()}, 1000);
+	initKeys();
+}
+
+//Add hotkeys to change modes: S=score, D=defense, W=miss, A=Pass, E=catch
+//This function is called at init()
+function initKeys(){
+	shortcut.add("S", function(){changeMode(modes.SCORE);});
+	shortcut.add("D", function(){changeMode(modes.DEFENSE);});
+	shortcut.add("A", function(){changeMode(modes.PASS);});
+	shortcut.add("W", function(){changeMode(modes.MISS);});
+	shortcut.add("E", function(){changeMode(modes.CAT);});
+	shortcut.add("Q", function(){changeMode(modes.UP);});
+	shortcut.add("Z", function(){changeMode(modes.DOWN);});
+}
+
+//make mark on canvas
+function mark(){
+	bBox = map.getBoundingClientRect();
+ 
+	if (initd == 1){
+		if(modeInd == modes.SCORE || modeInd == modes.MISS)
+		       	drawShot();
+		else if(modeInd == modes.PASS || modeInd == modes.CAT)
+			drawPass();
+		else if(modeInd == modes.DEFENSE)
+			drawDefense();
+		else
+			alert("ERROR: undefined mode index");
+	}else if(initd == 0){
+		drawStartPoint();
+	}else{
+		alert('Please reset match');
+	}
+}
+
+//end match
+function matchEnd(){
+	initd = 2;
+	matchState.innerHTML = "MATCH OVER";
+	clearTimeout(matchTimer);
+	clearInterval(timeUpdater);
+}
+	
+
+//TESTING FUNCTION: prints coordinates stored in coor
+function printCoor(){
+	for(var i = 0; i < coorInd; i++){
+		document.write("(" + Math.round(coor[3*i]*map.width) + ", "
+			       	+ Math.round(coor[3*i + 1]*map.height) + ", "
+				+ coor[3*i +2] + ")");
+		document.write("<br>");
+	}
+}
+
+
+
+//clears all marks and clears coordinate storage
+function reset(){
+	cxt.clearRect(0,0,1042, 581);
+	cxt.drawImage(bg_img, 1, 1);
+	coor = [];
+	coorInd = 0;
+
+	initd = 0;
+	clearTimeout(matchTimer);
+	clearInterval(timeUpdater);
+	matchState.innerHTML = "NOT IN PROGRESS";
+	time = -1;
+	timeBackup = -1;
+	updateTime();
+}
+
+//updates the click mode
+function updateMode(){
+	for(var i = 0; i < mode.mode.length; i++)
+		if(mode.mode[i].checked){
+			modeInd = i;
+			break;
+		}
+}
+
+	
+//update match timer
+function updateTime(){
+	if(time == 150){
+		matchEnd();
+	}else{
+		time += 1;
+		timeDisp = document.getElementById("matchTime");
+		timeDisp.innerHTML = time;
+	}
+}
+</script>
+</body>
+</html>

@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST["match"] != "" && $_POST["tea
 
 	if (!mysqli_query($con,$query))
 	{
-	die('Error: ' . mysqli_error($con));
+		die('Error: ' . mysqli_error($con));
 	}
 
 	//Tidy up

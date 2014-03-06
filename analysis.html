@@ -4,18 +4,16 @@
 
 <link rel= "stylesheet" href="../css/default.css" type="text/css">
 <script type="text/javascript">
-var TICK_TIME=5;
+var tickTime=5;
 var MATCH_LENGTH=140;
-var NUM_DISPLAY=10;
-var robots;
+var numDisplay=10;
+var robots=[];
 
 //INPUT FUNCTIONS \/
 
 function enter(e){//allows for the user to press the enter key instead of pressing "analyze"
-	var unicode=e.keyCode? e.keyCode : e.charCode;
-	if(unicode==13){
-		gatherData();
-	}
+	tickTime=document.getElementById("a").value;
+	numDisplay=document.getElementById("b").value;
 }
 
 function gatherData(){//gathers information from the server
@@ -23,7 +21,7 @@ function gatherData(){//gathers information from the server
 	var xmlhttp;
 	
 	MATCH_LENGTH=document.getElementById("a").value;
-	NUM_DISPLAY=document.getElementById("b").value;
+	numDisplay=document.getElementById("b").value;
 	
 	if (window.XMLHttpRequest){
 		xmlhttp=new XMLHttpRequest();
@@ -74,7 +72,7 @@ function Robot(team,defense,scoreProb,scoreVal,autonVal,toss,capture,drive,passS
 	
 	this.pass=function(defense){
 		if(Math.random()<=scoreProb-defense/10){ //TODO?: use a better random number generator?
-			if(hasBall){//TODO?:change above, keep better track?
+			if(this.hasBall){//TODO?:change above, keep better track?
 				this.hasBall = false;
 				return true;
 			}
@@ -82,20 +80,24 @@ function Robot(team,defense,scoreProb,scoreVal,autonVal,toss,capture,drive,passS
 		return false;
 	};
 	
-	//TODO:fix logic error
 	this.tick=function(defended){
-		if( (this.taskTime-TICK_TIME)>0 ){//if the robot still has to "wind up"
-			this.taskTime-=TICK_TIME;
+		if(this.taskTime!=-1)
+			this.taskTime-=tickTime;
+		
+		if(this.taskTime>0 || this.taskTime==-1){//if the robot still has to "wind up"
 			return false;
 		}else{
-			if(this.task.localeCompare("pass")==0)
-				return pass(defended);
-			else if(this.task.localeCompare("shoot")==0)
-				return pass(defended);
-			else if(this.task.localeCompare("defend")==0)
-				return (Math.random()<.75);
+			if(this.task.localeCompare("pass")==0){
+				//return this.pass(defended);
+				return true;
+			}else if(this.task.localeCompare("shoot")==0){
+				//return this.pass(defended);
+				return true;
+			}else if(this.task.localeCompare("defend")==0){
+				//return (Math.random()<.75);
+				return true;
+			}
 		}
-		//return false;
 	};
 }
 
@@ -104,66 +106,76 @@ function Alliance(a,b,c){
 	this.a=a;
 	this.b=b;
 	this.c=c;
-	this.bots=[a,b,c];
+	this.bots=new Array();
+	this.bots[0]=a;this.bots[1]=b;this.bots[2]=c;
 	
-	this.ballHeat=0;
+	this.ballHeat=10;
 	this.score=0;
 	this.passes=0;
+	var t=Math.floor(Math.random()*this.bots.length);
+	this.bots[t].setTask("pass");
+	this.bots[(t+1)%this.bots.length].setTask("pass");
+	this.bots[(t+2)%this.bots.length].setTask("defend");
 	
 	this.wins=0;
+	this.avgScore=0;
 	this.matches=0;
 	
 	this.playAuton=function(){
-		this.score+=a.autonVal+b.autonVal+c.autonVal;
+		this.score+=this.a.autonVal+this.b.autonVal+this.c.autonVal;
 	};
 	
 	this.pass=function(robot){
 		target=(robot+Math.floor(Math.random()*2+1))%3;
 		if(Math.random()<.3334 && robot.toss && bots[target].capture){
 			this.ballHeat+=20;
-			this.passes++;
 		} else {
 			this.ballHeat+=10;
-			this.passes++;
 		}
+		this.passes++;
+		//console.log("passes:"+this.passes);
 		
-		if(passes>2)
+		if(this.passes>2){
 			this.bots[target].setTask('shoot');
-		else
+		}else{
 			this.bots[target].setTask('pass');
+		}
 	};
 	
 	this.tick=function(defended){
 		if(a.tick(defended)){
 			if(a.task.localeCompare("pass")==0){
-				pass(1);
-				this.a.setTask("defend");
-			} else if(a.task.localeCompare("shoot")){
-				this.score+=ballHeat;
-				this.bots[floor(Math.random()*bots.length)].setTask("pass");//reset everything for another cycle
-				this.ballHeat=0;
+				this.pass(1);
+				this.a.setTask("tea");
+			} else if(a.task.localeCompare("shoot")==0){
+				this.score+=this.ballHeat;
+				console.log("Scored for "+this.ballHeat+" points");
+				this.bots[Math.floor(Math.random()*this.bots.length)].setTask("pass");//reset everything for another cycle
+				this.ballHeat=10;
 				this.passes=0;
 			}
 		}
 		if(b.tick(defended)){
 			if(b.task.localeCompare("pass")==0){
 				this.pass(2);
-				this.b.setTask("defend");//once we are done this is aboot all we can do
+				this.b.setTask("tea");//once we are done this is aboot all we can do
 			} else if(b.task.localeCompare("shoot")){
-				this.score+=ballHeat;
-				this.bots[floor(Math.random()*bots.length)].setTask("pass");//reset everything for another cycle
-				this.ballHeat=0;
+				this.score+=this.ballHeat;
+				console.log("Scored for "+this.ballHeat+" points");
+				this.bots[Math.floor(Math.random()*this.bots.length)].setTask("pass");//reset everything for another cycle
+				this.ballHeat=10;
 				this.passes=0;
 			}
 		}
 		if(c.tick(defended)){
 			if(c.task.localeCompare("pass")==0){
 				this.pass(3);
-				this.c.setTask("defend");//once we are done this is aboot all we can do
+				this.c.setTask("tea");//once we are done this is aboot all we can do
 			} else if(c.task.localeCompare("shoot")){
-				this.score+=ballHeat;
-				this.bots[floor(Math.random()*bots.length)].setTask("pass");//reset everything for another cycle
-				this.ballHeat=0;
+				this.score+=this.ballHeat;
+				console.log("Scored for "+this.ballHeat+" points");
+				this.bots[Math.floor(Math.random()*this.bots.length)].setTask("pass");//reset everything for another cycle
+				this.ballHeat=10;
 				this.passes=0;
 			}
 		}
@@ -172,20 +184,29 @@ function Alliance(a,b,c){
 	this.getDefense=function(){
 		ret=0;
 		if(a.task.localeCompare("defend")==0)
-			ret+=this.a.defense/(140/TICK_TIME);//TODO: add random element
+			ret+=this.a.defense/(140/tickTime);//TODO: add random element
 		if(b.task.localeCompare("defend")==0)
-			ret+=this.b.defense/(140/TICK_TIME);//TODO: add random element
+			ret+=this.b.defense/(140/tickTime);//TODO: add random element
 		if(c.task.localeCompare("defend")==0)
-			ret+=this.c.defense/(140/TICK_TIME);//TODO: add random element
+			ret+=this.c.defense/(140/tickTime);//TODO: add random element
 		
 		return ret;
 	};
 	
 	this.win=function(won){
+		this.avgScore+=this.score;
 		this.matches++;
 		if(won){
 			this.wins++;
 		}
+		
+		this.ballHeat=10;
+		this.score=0;
+		this.passes=0;
+		var t=Math.floor(Math.random()*this.bots.length);
+		this.bots[t].setTask("pass");
+		this.bots[(t+1)%this.bots.length].setTask("pass");
+		this.bots[(t+2)%this.bots.length].setTask("defend");
 	};
 	
 	this.getWinR=function(){
@@ -193,7 +214,7 @@ function Alliance(a,b,c){
 	};
 	
 	this.getInfo=function(){
-		return "<div class='floater'>teams: "+this.a.team+","+this.b.team+","+this.c.team+"</br>Simulated Stats:</br>win ratio:"+this.wins+"</br></div>";//TODO: add any relevant information if any
+		return "<div class='floater'>teams: "+this.a.team+","+this.b.team+","+this.c.team+"</br>Simulated Stats:</br>win ratio: "+this.wins+"</br>average score: "+this.avgScore/this.matches+"</div>";//TODO: add any relevant information if any
 	};
 }
 
@@ -203,18 +224,21 @@ function playMatch(a,b){//returns true if a wins false if b wins
 	a.playAuton();
 	b.playAuton();
 	
-	timeLeft=MATCH_LENGTH;
+	timeLeft=140;
 	
 	while(timeLeft>0){
 		a.tick(b.getDefense());
 		b.tick(a.getDefense());
-		timeLeft-=TICK_TIME;
+		timeLeft-=tickTime;
 	}
 	
-	if(a.score>b.score)
+	if(a.score>b.score){
+		console.log(a.score);
 		return true;
-	else
+	}else{// shakhzadyan smaek daedi
+		console.log(b.score);
 		return false;
+	}
 }
 
 function calculate(str){//actually finds the best alliance
@@ -228,21 +252,18 @@ function calculate(str){//actually finds the best alliance
 				alls[i].win(true);
 				alls[ii].win(false);
 			}else{
-				alls[i].win(true);
-				alls[ii].win(false);
+				alls[i].win(false);
+				alls[ii].win(true);
 			}
 		}
 	}
 	
 	console.log("sorting robots...");
 	sortByWinR(alls,0,alls.length-1);
-	//document.write(""+alls[alls.length-1].team);
-	//document.getElementById("output").innerHTML=alls[alls.length-1].team;
 	
 	document.getElementById("output").innerHTML="";
-	for(i=0;i<alls.length && i<NUM_DISPLAY;i++){
+	for(i=0;i<alls.length && i<numDisplay;i++){
 		document.getElementById("output").innerHTML=document.getElementById("output").innerHTML+"</br>"+alls[i].getInfo();
-		//document.getElementById("output").innerHTML="test"+i;
 	}
 }
 
@@ -258,7 +279,7 @@ function sortByWinR(alls,left,right){//Merge sort to sort by best win/loss ratio
 			if(arr[i].getWinR()>val){
 				temp=arr[i];
 				arr[i]=arr[storeInd];
-				arr[storeInd]=temp;
+				arr[storeInd]=temp; 
 				storeInd++;
 			}
 		}
@@ -301,24 +322,27 @@ function createBots(bots,margin,ignore){
 	var i=0;
 	var valid=true;
 	
+	console.log(bots);
 	while(!(bots.indexOf(";")==-1)){
 		//var str=bots.substring(1,bots.indexOf(';'));
 		var str=bots;
 		var team=parseInt( str.substring(0,str.indexOf(':')) );
-		str=str.substring(str.indexOf(','));
-		var defense=parseInt( str.substring(1,str.indexOf(',')) );
-		str=str.substring(str.indexOf(','));
-		var scoreProb=parseInt( str.substring(1,str.indexOf(',')) );
-		str=str.substring(str.indexOf(','));
-		var scoreVal=parseInt( str.substring(1,str.indexOf(',')) );
-		str=str.substring(str.indexOf(','));
-		var autonVal=parseInt( str.substring(1,str.indexOf(',')) );
-		str=str.substring(str.indexOf(','));
-		var toss=parseInt( str.substring(1,str.indexOf(',')) );
-		str=str.substring(str.indexOf(','));
-		var capture=parseInt( str.substring(1,str.indexOf(',')) );
-		str=str.substring(str.indexOf(','));
-		var drive=parseInt( str.substring(1,str.indexOf(';')) );
+		str=str.substring(str.indexOf(',')+1);
+		var defense=parseInt( str.substring(0,str.indexOf(',')) );
+		str=str.substring(str.indexOf(',')+1);
+		var scoreProb=parseInt( str.substring(0,str.indexOf(',')) );
+		str=str.substring(str.indexOf(',')+1);
+		var scoreVal=parseInt( str.substring(0,str.indexOf(',')) );
+		str=str.substring(str.indexOf(',')+1);
+		var autonVal=parseInt( str.substring(0,str.indexOf(',')) );
+		str=str.substring(str.indexOf(',')+1);
+		var toss=parseInt( str.substring(0,str.indexOf(',')) );
+		str=str.substring(str.indexOf(',')+1);
+		var capture=parseInt( str.substring(0,str.indexOf(',')) );
+		str=str.substring(str.indexOf(',')+1);
+		var drive=parseInt( str.substring(0,str.indexOf(',')) );
+		str=str.substring(str.indexOf(',')+1);
+		var passSpeed=parseInt( str.substring(0,str.indexOf(';')) );
 		
 		/*valid=true;
 		for(i=0;i<ignore.length;i++){
@@ -326,11 +350,9 @@ function createBots(bots,margin,ignore){
 				valid=false;
 		}*/
 		if(valid){
-			ret.push(new Robot(team,defense,scoreProb,scoreVal,autonVal,toss,capture,drive));
+			ret.push(new Robot(team,defense,scoreProb,scoreVal,autonVal,toss,capture,drive,passSpeed));
 		}
 		
-		console.log(bots);
-		console.log( bots.substring(1).substring(bots.substring(1).indexOf(";")+1) );
 		bots=bots.substring(1).substring(bots.substring(1).indexOf(";")+1);
 	}
 	return ret;
