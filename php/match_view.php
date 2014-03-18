@@ -11,10 +11,10 @@ echo '<html>
 <a href="../index.html"><img src="../assets/Scouting4.png" alt="Scouting4.png" width="639" height="200"></a>
 <h1>Match Results Per Robot</h1>';
 $team = 0;
-$heads=array("autonomous","tosses over bar","catches from bar","passes","received","high goals","low goals","defense","fouls","tech fouls","problems","won/lost","notes","tags");//stores the column header names
+$heads=array("autonomous","tosses over bar","catches from bar","passes","received","high goals","low goals","defense","fouls","tech fouls","won/lost","notes","tags");//stores the column header names
 
 $team = "*";
-$auton = $barToss = $barCatch = $passes = $recieve = $goalHigh =$goalLow = $defense = $fouls = $tech_fouls = $tech_problems = $won = $notes = $tags = True;
+$auton = $barToss = $barCatch = $passes = $recieve = $goalHigh =$goalLow = $defense = $fouls = $tech_fouls = $tech_problems = $won = $notes = $tags = true;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST"){
 	// define variables and set to default values
@@ -48,13 +48,19 @@ if (mysqli_connect_errno()){
 }
 
 //Gather the actual data FOR MATCHES                         <-------------------------Matches
-//TODO: ? restrict to only the needed values
+$tags=array();
+if(!strcmp($_POST["hashtag"],"")==0){
+	$str=$_POST["hashtag"];
+	str_replace(",","#",$str);//changes everything list to be separated by #s
+	str_replace(",#","#",$str);
+	$tags=explode("#",$str);
+}
 $result=mysqli_query($con,"SELECT * FROM match_data");
 
 //Here we get ready to print out a table
 $print="<table class='display'><tr> <th>match</th> <th>team</th>";
 
-for($i=0;$i<sizeof($heads) && $i<sizeof($cols);$i++){
+for($i=0;$i<sizeof($heads);$i++){
 	if($cols[$i]){
 		$print=$print."<th>".$heads[$i]."</th>";
 	}
@@ -119,27 +125,21 @@ while($row = mysqli_fetch_array($result)){
 	else
 		$print=$print."<td>lost</td>";
 	
-	$printf=$printf.$print."</tr>";
+	//check to see if the tag is contained in this entry
+	$tagContained=false;
+	for($i=0;$i<sizeof($tags);$i++){
+		if($tags[$i]!="" && strpos($row['tags'],$tags[$i])!==false){
+			$tagContained=true;
+			break;
+		}
+	}
+	
+	if(empty($tags) || $tagContained){
+		$printf=$printf.$print."</tr>";
+	}
 }
 $printf=$printf."</table></body></div></html>";
 echo $printf;
-
-/* I just commented out everything from team info, I find it of dubious necessity anyway
-//Gather the actual data FROM Team statistics                                  
-//TODO: ? restrict to only the needed values
-$result=mysqli_query($con,"SELECT * FROM team_data");//TODO: make sure the name of the database is right
-
-//Here we get ready to print out a table
-$print="<table><tr> <td>team</td> <td>work well</td> <td>mentors</td></tr>";
-
-//Gos through every row and places information in the table
-while($row = mysqli_fetch_array($result)){
-	$print=$print."<tr><td>".$row['team'].
-	"</td><td>worked well together:".$row['work_well']." mentors:".$row['mentors']."</td></tr>";//TODO:check over everything here and make sure columns correspond
-}
-$print=$print."</table>";
-echo $print;
-*/
 
 mysqli_close($con);
 ?>
