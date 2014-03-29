@@ -18,27 +18,32 @@
 <form action="php/robot_attributes.php" method="post">
 Team Number:<input type = "number" name = "teamnum">
 <h3>Floor Pickup: </h3>
-Does the robot have floor pickup? <input type="checkbox" name="floor_pickup">
+Does the robot have floor pickup? <input type="checkbox" name="pickup">
 </br>
 <h3>Shooter:</h3>
-How much time does it take to shoot in seconds? <input type="number" name="shoot_time"> </input>
-</br>
-<h3>Drivetrain:</h3>
-<textarea name="drive" rows="5" cols="60">Type: </textarea>
+Does the Robot Have a Shooter:<input type="checkbox" name="shooter"></input></br>
+How much time does it take to line up for a shot in seconds? <input type="number" name="shoot_time"> </input>
 </br>
 <h3>Ejection/Kicker:</h3>
 <textarea name="passing" rows="5" cols="60"></textarea>
 </br>
+<h3>Drivetrain:</h3>
+<textarea name="drive" rows="5" cols="60">Type: </textarea>
+</br>
 <h3>Catcher: </h3>
 Does the robot have a catcher? <input type="checkbox" name="catcher" rows="5" cols="60">
 </br>
-Can the robot catch over the truss? <input type="checkbox" name="catcher" rows="5" cols="60">
+Can the robot catch over the truss? <input type="checkbox" name="truss_catch" rows="5" cols="60">
 </br>
-<h3>Blocker/Defense:</h3>
-Success rate of blocking:<input type="number" name="block_success" rows="5" cols="60"></input></br></br>
-<textarea name="block" rows="5" cols="60">Capability of blocking in a viable fashion: </textarea>
-<br>
-<br>
+<h3>Strategy</h3>
+<p>Does the team prefer offense or defense:</p><textarea name="off_def" rows="5" cols="60"></textarea>
+</br>
+<select name="comp">
+	<option value="flr">flr</option>
+	<option value="buckeye">buckeye</option>
+	<option value="championships">championships</option>
+</select></br>
+</br>
 
 <center><input type="submit"></center>
 
@@ -47,6 +52,3 @@ Success rate of blocking:<input type="number" name="block_success" rows="5" cols
 </div>
 </body>
 </html>
-
-
-

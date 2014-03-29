@@ -16,7 +16,8 @@
 <h3>Enter data here:</h3>
 </p>
 
-<form action="php/match_entry.php" method="post">
+<!--<form action="php/match_entry.php" method="post" id="form">-->
+<form id="form">
 Match number:<input type="number" name="match"> </br>
 Team number:<input type="number" name="team"> </br>
 </br>
@@ -25,92 +26,163 @@ Shot high:<input type="radio" name="shot_auton" value="high"></br>
 Shot low:<input type="radio" name="shot_auton" value="low"></br>
 Missed:<input type="radio" name="shot_auton" value="missed_auton"></br> <!-- TODO:add these fields to the database and to the php script -->
 Didn't Take Ball:<input type="radio" name="shot_auton" value="NA"></br>
-Hot goal:<input type="checkbox" name="hot" value="hot"></br>
-Drove forward:<input type="checkbox" name="drove_auton" value="drove"></br>
+Hot goal:<input type="checkbox" name="hot" value="hot" id="hot"></br>
+Drove forward:<input type="checkbox" name="drove_auton" value="drove" id="drove"></br>
 </br>
 <h3>Main game:</br></h3>
 
-Passes Over Truss:<input type="number" name="bar_toss" id="a">
-<button onclick="increment('a')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/plus.png" width="20" height="20"></button>
-<button onclick="decrement('a')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/minus.png" width="20" height="20"></button></br>
+Passes Over Truss:<input type="number" name="bar_toss">
+<button onclick="increment('bar_toss')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/plus.png" width="20" height="20"></button>
+<button onclick="decrement('bar_toss')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/minus.png" width="20" height="20"></button></br>
 
-Catches From Truss:<input type="number" name="bar_catch" id="b">
-<button onclick="increment('b')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/plus.png" width="20" height="20"></button>
-<button onclick="decrement('b')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/minus.png" width="20" height="20"></button></br>
+Catches From Truss:<input type="number" name="bar_catch">
+<button onclick="increment('bar_catch')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/plus.png" width="20" height="20"></button>
+<button onclick="decrement('bar_catch')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/minus.png" width="20" height="20"></button></br>
 
-Passes (don't include the bar):<input type="number" name="passes" id="c">
-<button onclick="increment('c')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/plus.png" width="20" height="20"></button>
-<button onclick="decrement('c')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/minus.png" width="20" height="20"></button></br>
-
-
-Assists:<input type="number" name="recieved" id="d">
-<button onclick="increment('d')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/plus.png" width="20" height="20"></button>
-<button onclick="decrement('d')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/minus.png" width="20" height="20"></button></br>
+Passes (don't include the bar):<input type="number" name="passes">
+<button onclick="increment('passes')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/plus.png" width="20" height="20"></button>
+<button onclick="decrement('passes')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/minus.png" width="20" height="20"></button></br>
 
 
-High goals:<input type="number" name="goal_high" id="e">
-<button onclick="increment('e')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/plus.png" width="20" height="20"></button>
-<button onclick="decrement('e')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/minus.png" width="20" height="20"></button></br>
+Assists:<input type="number" name="received">
+<button onclick="increment('received')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/plus.png" width="20" height="20"></button>
+<button onclick="decrement('received')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/minus.png" width="20" height="20"></button></br>
 
 
-Low goals:<input type="number" name="goal_low" id="f">
-<button onclick="increment('f')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/plus.png" width="20" height="20"></button>
-<button onclick="decrement('f')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/minus.png" width="20" height="20"></button></br>
+High goals:<input type="number" name="goal_high">
+<button onclick="increment('goal_high')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/plus.png" width="20" height="20"></button>
+<button onclick="decrement('goal_high')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/minus.png" width="20" height="20"></button></br>
 
 
-Missed goals:<input type="number" name="missed" id="g">
-<button onclick="increment('g')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/plus.png" width="20" height="20"></button>
-<button onclick="decrement('g')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/minus.png" width="20" height="20"></button></br>
+Low goals:<input type="number" name="goal_low">
+<button onclick="increment('goal_low')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/plus.png" width="20" height="20"></button>
+<button onclick="decrement('goal_low')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/minus.png" width="20" height="20"></button></br>
+
+
+Missed goals:<input type="number" name="missed">
+<button onclick="increment('missed')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/plus.png" width="20" height="20"></button>
+<button onclick="decrement('missed')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/minus.png" width="20" height="20"></button></br>
 
 
 Estimated points defended:<input type="number" name="defense"></br>
 
 
-Balls Killed:<input type="number" name="killed" id="h">
-<button onclick="increment('h')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/plus.png" width="20" height="20"></button>
-<button onclick="decrement('h')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/minus.png" width="20" height="20"></button></br>
+Balls Killed:<input type="number" name="killed">
+<button onclick="increment('killed')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/plus.png" width="20" height="20"></button>
+<button onclick="decrement('killed')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/minus.png" width="20" height="20"></button></br>
 
 
-Fouls:<input type = "number" name = "fouls" id="i">
-<button onclick="increment('i')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/plus.png" width="20" height="20"></button>
-<button onclick="decrement('i')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/minus.png" width="20" height="20"></button></br>
+Fouls:<input type = "number" name = "fouls">
+<button onclick="increment('fouls')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/plus.png" width="20" height="20"></button>
+<button onclick="decrement('fouls')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/minus.png" width="20" height="20"></button></br>
 
 
-Technical Fouls:<input type = "number" name = "tech_fouls" id="j">
-<button onclick="increment('j')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/plus.png" width="20" height="20"></button>
-<button onclick="decrement('j')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/minus.png" width="20" height="20"></button></br>
+Technical Fouls:<input type = "number" name = "tech_fouls">
+<button onclick="increment('tech_fouls')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/plus.png" width="20" height="20"></button>
+<button onclick="decrement('tech_fouls')" src="/assets/plus.png" type="button" class="inc"><img src="/assets/minus.png" width="20" height="20"></button></br>
 
 </br>
 Won:<input type="radio" name="won" value="won"></br>
 Lost:<input type="radio" name="won" value="lost"></br></br>
 
-Tags (separate by commas):<input type="text" name="tags" size="60"></br>
+Tags (separate by #):<input type="text" name="tags" size="60"></br>
 Technical Problems:<br><textarea rows = "7" cols = "60" name = "tech_problems">NA</textarea></br>
 Notes:<br><textarea rows="10" cols="60" name="notes"></textarea></br>
-<input type="submit">
+<select name="comp" id="comp">
+	<option value="flr">flr</option>
+	<option value="buckeye">buckeye</option>
+	<option value="championships">championships</option>
+</select></br>
+<button type="button" onclick="upload()">submit</button>
 </form>
+<div id="response"></div>
 </div>
 
 <script type="text/javascript">
 function increment(field){
-	var s=document.getElementById(field).value;
+	var s=document.getElementsByName(field)[0].value;
 	if(s==""){
-		document.getElementById(field).value=1;
+		document.getElementsByName(field)[0].value=1;
 	}else{
 		var v=parseInt(s);
 		v+=1;
-		document.getElementById(field).value=v;
+		document.getElementsByName(field)[0].value=v;
 	}
 }
 
 function decrement(field){
-	var s=document.getElementById(field).value;
+	var s=document.getElementsByName(field)[0].value;
 	if(s==""){
-		document.getElementById(field).value=1;
+		document.getElementsByName(field)[0].value=1;
 	}else{
 		var v=parseInt(s);
-		v-=1;
-		document.getElementById(field).value=v;
+		if(v>0)
+			v-=1;
+		document.getElementsByName(field)[0].value=v;
+	}
+}
+
+//returns a default empty string
+function getRadioValue(name){
+	var rad=document.getElementsByName(name);
+	
+	for(var i=0;i<rad.length;i++){
+		if(rad[i].checked){
+			return rad[i].value;
+		}
+	}
+	return "";
+}
+
+function upload(){
+	if(document.cookie.indexOf("enter_data")==-1){
+		var xmlhttp;
+		
+		if(window.XMLHttpRequest){
+			xmlhttp=new XMLHttpRequest();
+		}else{
+			xmlhttp=ActiveXObject("Microsoft.XMLHTTP");
+		}
+		
+		xmlhttp.onreadystatechange=function(){
+			if(xmlhttp.readyState==4 && xmlhttp.status==200){
+				document.getElementById("response").innerHTML=xmlhttp.responseText;
+				var m=parseInt(document.getElementsByName("match")[0].value);
+				document.getElementById("form").reset();
+				document.getElementsByName("match")[0].value=m+1;
+			}
+		}
+		
+		var competition=document.getElementById("comp");
+		
+		//TODO:FIX IF BROKE: probably is
+		var parameters="match="+document.getElementsByName("match")[0].value+
+		"&team="+document.getElementsByName("team")[0].value+
+		"&shot_auton="+getRadioValue("shot_auton")+
+		"&hot="+document.getElementById("hot").checked+
+		"&drove_auton="+document.getElementById("drove").checked+
+		"&bar_toss="+document.getElementsByName("bar_toss")[0].value+
+		"&bar_catch="+document.getElementsByName("bar_catch")[0].value+
+		"&passes="+document.getElementsByName("passes")[0].value+
+		"&receive="+document.getElementsByName("received")[0].value+
+		"&goal_high="+document.getElementsByName("goal_high")[0].value+
+		"&goal_low="+document.getElementsByName("goal_low")[0].value+
+		"&missed="+document.getElementsByName("missed")[0].value+
+		"&defense="+document.getElementsByName("defense")[0].value+
+		"&killed="+document.getElementsByName("killed")[0].value+
+		"&fouls="+document.getElementsByName("fouls")[0].value+
+		"&tech_fouls="+document.getElementsByName("tech_fouls")[0].value+
+		"&won="+getRadioValue("won")+
+		"&tags="+document.getElementsByName("tags")[0].value+
+		"&tech_problems="+document.getElementsByName("tech_problems")[0].value+
+		"&competition="+competition.options[competition.selectedIndex].value+
+		"&notes="+document.getElementsByName("notes")[0].value;
+		
+		xmlhttp.open("POST","/php/match_entry.php",true);
+		xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xmlhttp.send(parameters);
+	}else{
+		alert("you do not have permission to submit data");
 	}
 }
 </script>

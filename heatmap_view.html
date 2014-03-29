@@ -11,18 +11,28 @@
 </br><ul id="header"><li><a href="match_entry.html">Match entry</a></li><li><a href="robot_attributes.html">Robot Data</a></li><li><a href="heatmap.html">Heatmap Enter</a></li></ul><ul id="header"><li><a href="match_view.html">View Matches</a></li><li><a href="php/robot_view.php">View Robots</a></li><li><a href="/graph.html">Graphs</a></li><li><a href="analysis.html">Analysis</a></li><li><a href="heatmap_view.html">Heatmap View</a></li></ul>
 
 <body>
-</br><h>Match State: </h> <h id="state">NOT IN PROGRESS</h>
-</br>
+
+normal:<input type="radio" name="type" id="n" value="normal" checked>
+gradient:<input type="radio" name="type" id="g" value="gradient"></br>
+score:<input type="radio" name="disp" id="s" checked>
+pass:<input type="radio" name="disp" id="p">
+defense:<input type="radio" name="disp" id="d">
 
 <canvas id="map" width="1042" height="581" style="border:1px solid #d3d3d3">Your browser does not support the HTML5 canvas tag.</canvas>
 </br>
 
 Team number:<input type="number" name="team" id="t" onkeypress="enter(event)"> </br>
+<button type="button" onClick="erase()">clear</button>
 <button type="button" onClick="load()">submit</button>
 <div id="server_response"></div>
 <script>
+var CIRCLE_GAP=3;
+var CIRCLES=50;
+
 var map=document.getElementById("map");
 var cxt=map.getContext("2d");
+
+var type=document.getElementById("n");
 
 //only draw the image on the canvas if it has actually been loaded
 document.getElementById("bgimg").onload=function(){
@@ -46,15 +56,62 @@ function enter(e){
 	}
 }
 
-function draw(){
+function erase(){
+	var bg_img = document.getElementById("bgimg");
+	cxt.drawImage(bg_img, 1, 1);
+	cxt.textAlign="center";
+	cxt.font="18pt cabin";
+}
+
+function drawGradient(){
 	cxt.beginPath();
 	cxt.lineWidth = "1";
 	cxt.strokeStyle = "#AD0000";
 	cxt.rect(startPos[0],startPos[1], 5, 5);
 	cxt.stroke();
 	
-	cxt.fillStyle="black";
-	cxt.font="12pt cabin";
+	if(document.getElementById("s").checked){
+		for(i=0;i<coor.length-2;i+=3){
+			cxt.lineWidth = "1";
+			
+			for(var ii=0;ii<CIRCLES;ii++){
+				cxt.beginPath();
+				cxt.fillStyle = "rgba(0,255,0,.01)";
+				cxt.arc(coor[i]*map.width,coor[i+1]*map.height, ii*CIRCLE_GAP, 0, 2*Math.PI);
+				cxt.fill();
+			}
+		}
+	}else if(document.getElementById("d").checked){
+		for(i=0;i<dCoor.length-2;i+=3){
+			cxt.lineWidth = "1";
+			
+			for(var ii=0;ii<CIRCLES;ii++){
+				cxt.beginPath();
+				cxt.fillStyle = "rgba(126,126,126,.01)";
+				cxt.arc(dCoor[i]*map.width,dCoor[i+1]*map.height, ii*CIRCLE_GAP, 0, 2*Math.PI);
+				cxt.fill();
+			}
+		}
+	}else{
+		for(i=0;i<pCoor.length-2;i+=3){
+			cxt.lineWidth = "1";
+			
+			for(var ii=0;ii<CIRCLES;ii++){
+				cxt.beginPath();
+				cxt.fillStyle = "rgba(0,0,255,.01)";
+				cxt.arc(pCoor[i]*map.width,pCoor[i+1]*map.height, ii*CIRCLE_GAP, 0, 2*Math.PI);
+				cxt.fill();
+			}
+		}
+	}
+}
+
+function draw(){
+	cxt.beginPath();
+	cxt.lineWidth = "1";
+	cxt.strokeStyle = "#AD0000";
+	cxt.rect(startPos[0],startPos[1], 5, 5);
+	cxt.stroke();
 	
 	for(i=0;i<coor.length-2;i+=3){
 		cxt.beginPath();
@@ -103,13 +160,13 @@ function load()
 			process(xmlhttp.responseText);
 		}
 	}
-	//document.write("/php/graph.php?team="+document.getElementById("t").value);
+	
 	xmlhttp.open("GET","/php/heatmap_view.php?team="+document.getElementById("t").value,true);
 	xmlhttp.send();
-	//alert("steve");
 }
 
 function process(info){
+	console.log(info);
 	startPos.push(info.substring(0,info.indexOf(",")));
 	info=info.substring(info.indexOf(",")+1);
 	startPos.push(info.substring(0,info.indexOf(";")));
@@ -138,6 +195,28 @@ function process(info){
 	}
 	pCoor.push(str.substring(0,str.indexOf(";")));
 	
-	draw();
+	var bg_img = document.getElementById("bgimg");
+	cxt.drawImage(bg_img,1,1);
+	cxt.textAlign="center";
+	cxt.font="18pt cabin";
+	
+	if(type.checked){
+		draw();
+	}else{
+		drawGradient();
+	}
+	
+	for(var i=0;i<coor.length-2;i+=3){
+		console.log("x:"+coor[i]*map.width);
+		console.log("y:"+coor[i+1]*map.height);
+	}
+	for(var i=0;i<dCoor.length-2;i+=3){
+		console.log("x:"+dCoor[i]*map.width);
+		console.log("y:"+dCoor[i+1]*map.height);
+	}
+	for(var i=0;i<pCoor.length-2;i+=3){
+		console.log("x:"+pCoor[i]*map.width);
+		console.log("y:"+pCoor[i+1]*map.height);
+	}
 }
 </script>

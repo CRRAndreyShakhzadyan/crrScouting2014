@@ -20,11 +20,11 @@
 <canvas id="map" width="1042" height="581" style="border:1px solid #d3d3d3" onmousedown="mark()">Your browser does not support the HTML5 canvas tag.</canvas>
 </br> 
 <h>Mode:</h>
-<form action ="" id="mode" onclick="updateMode()"> 
-	Score:<input type="radio" name="mode"  value="s" checked>
-	Defense:<input type="radio" name="mode" value="d" >
+<form action ="" id="mode" onclick="updateMode()">
 	Pass:<input type="radio" name="mode"  value="p">
-	Catch:<input type="radio" name="mode" value="c">
+	High:<input type="radio" name="mode"  value="h" checked>
+	Low:<input type="radio" name="mode" value="l">
+	Defense:<input type="radio" name="mode" value="d" >
 	Miss:<input type="radio" name="mode" value="m">
 </form></br>
 
@@ -41,8 +41,8 @@ var timeUpdater;
 var time = 0;
 var mode = document.getElementById("mode");
 var modeInd = 0;
-var modes = {SCORE : 0, DEFENSE : 1, PASS : 2, CAT : 3, MISS : 4, UP : 5, DOWN : 6};
-var markColors = ["#00FF00", "#C0C0C0","#8888FF","FF9933", "#FF0000"];
+var modes = {PASS : 0, HIGH : 1, LOW : 3, DEFENSE : 2, MISS : 4, UP : 5, DOWN : 6};
+var markColors = ["#8888FF","#00FF00", "#C0C0C0","FF9933", "#FF0000"];
 
 var map = document.getElementById("map");
 var cxt = map.getContext("2d");
@@ -50,7 +50,7 @@ var cxt = map.getContext("2d");
 var bBox = map.getBoundingClientRect();
 var LIMITS = [150, 895, 166, 510]; //x min, x max, y min, y max
 var BUTTON_X_LOCS = [376,450,524,598,672];//the location of the centers of each button
-var BUTTON_LABLES = ["Goal","Defense","Pass","Catch","Miss"];
+var BUTTON_LABLES = ["Pass","High","Low","Defense","Miss"];
 var BUTTON_Y_LOCS = 40;//all buttons are the on the same y location
 var BUTTON_SIZE = [72,48];//all buttons are the same size, ind 0 is x size and ind 1 is y size
 
@@ -133,9 +133,6 @@ function changeMode(m){
 
 //Draw small yellow circle for start point
 function drawStartPoint(x,y){
-	/*var e = window.event;
-	var x = e.clientX - bBox.left;
-	var y = e.clientY - bBox.top;*/
 	if(!unbounded(x,y)){
 		init();
 		startPos.push(x/map.width);
@@ -152,27 +149,31 @@ function drawStartPoint(x,y){
 //initialize things
 function init(){
 	initd = 1;
-	changeMode(modes.SCORE);
+	changeMode(modes.HIGH);
 	matchState.innerHTML = "AUTO";
 	matchTimer = setTimeout(function(){matchState.innerHTML = "TELEOP"}, 10000);
 	timeUpdater = setInterval(function(){updateTime()}, 1000);
 	//initKeys();
 }
 
-//Add hotkeys to change modes: S=score, D=defense, W=miss, A=Pass, E=catch
+//Add hotkeys to change modes: S=score, D=defense, W=miss, A=Pass
 //This function is called at init()
 document.onkeydown=function(){
 	//TODO:use document.activeElement;
 	var e = window.event;
 	var unicode=e.keyCode? e.keyCode : e.charCode;
-	if(unicode==68){//d key
-		//alert("chuck");
-		//document.getElementById("images").innerHTML=phpGET("/php/graph.php",new array,("team"),new array(document.getElementById("t").value));
+	if(unicode==83){//d key
 		changeMode(modes.DEFENSE);
-	}else if(unicode==83){//s key
-		changeMode(modes.SCORE)
-	}else if(unicode==65){//e key
+	}else if(unicode==87){//w key
+		changeMode(modes.HIGH);
+	}else if(unicode==68){//s key
+		changeMode(modes.LOW);
+	}else if(unicode==65){//a key
 		changeMode(modes.PASS);
+	}else if(unicode==69){//e key
+		changeMode(modes.CAT);
+	}else if(unicode==88){//x key
+		changeMode(modes.MISS);
 	}
 }
 
@@ -230,7 +231,8 @@ function reset(){
 		cxt.fillStyle="#DD0000";
 		cxt.fillRect(BUTTON_X_LOCS[i]-BUTTON_SIZE[0]/2, BUTTON_Y_LOCS-BUTTON_SIZE[1]/2, BUTTON_SIZE[0], BUTTON_SIZE[1]);
 		cxt.fillStyle="black";
-		cxt.fillText(BUTTON_LABLES[i],BUTTON_X_LOCS[i],BUTTON_Y_LOCS+3);//That magic number just adjusts the text's vertical position, it isn't a magic number if I describe it in the comments right?
+		cxt.fillText(BUTTON_LABLES[i],BUTTON_X_LOCS[i],BUTTON_Y_LOCS+3);
+		//That magic number just adjusts the text's vertical position; it isn't a magic number if I describe it in the comments right?
 	}
 	
 	initd = 0;
@@ -240,6 +242,13 @@ function reset(){
 	time = -1;
 	timeBackup = -1;
 	updateTime();
+	
+	document.getElementById("team").value="";
+	
+	var startPos=[];
+	var coor = []; //coordinates for teleop shots and misses(-x)
+	var dCoor = []; //coordinates for defensive actions
+	var pCoor = []; //coor for passes and catches(-x)
 }
 
 //updates the click mode
@@ -274,24 +283,30 @@ function getCSVString(arr){
 
 //calls php and submits the heatmap information
 function submit(){
-	var xmlhttp;
-	
-	if(window.XMLHttpRequest){
-		xmlhttp=new XMLHttpRequest();
-	}else{
-		xmlhttp=ActiveXObject("Microsoft.XMLHTTP");
-	}
-	
-	xmlhttp.onreadystatechange=function(){
-		if(xmlhttp.readyState==4 && xmlhttp.status==200){
-			document.getElementById("server_response").innerHTML=xmlhttp.responseText;
+	if(document.cookie.indexOf("enter_data")==-1){
+		var xmlhttp;
+		
+		if(window.XMLHttpRequest){
+			xmlhttp=new XMLHttpRequest();
+		}else{
+			xmlhttp=ActiveXObject("Microsoft.XMLHTTP");
 		}
+		
+		xmlhttp.onreadystatechange=function(){
+			if(xmlhttp.readyState==4 && xmlhttp.status==200){
+				document.getElementById("server_response").innerHTML=xmlhttp.responseText;
+			}
+		}
+		var parameters="team="+document.getElementById('t').value+"&startPosition="+getCSVString(startPos)+
+		"&score="+getCSVString(coor)+"&pass="+getCSVString(pCoor)+"&defend="+getCSVString(dCoor);
+		xmlhttp.open("POST","/php/heatmap_submit.php",true);
+		xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xmlhttp.send(parameters);
+	
+		reset();
+	}else{
+		alert("You don't have permission to submit data.");
 	}
-	var parameters="team="+document.getElementById('t').value+"&startPosition="+getCSVString(startPos)+
-	"&score="+getCSVString(coor)+"&pass="+getCSVString(pCoor)+"&defend="+getCSVString(dCoor);
-	xmlhttp.open("POST","/php/heatmap_submit.php",true);
-	xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xmlhttp.send(parameters);
 }
 </script>
 </body>

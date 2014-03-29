@@ -16,6 +16,8 @@ $heads=array("autonomous","tosses over bar","catches from bar","passes","receive
 $team = "*";
 $auton = $barToss = $barCatch = $passes = $recieve = $goalHigh =$goalLow = $defense = $fouls = $tech_fouls = $tech_problems = $won = $notes = $tags = true;
 
+$comp="flr";
+
 if ($_SERVER["REQUEST_METHOD"] == "POST"){
 	// define variables and set to default values
 	///$barToss = $barCatch = $passes = $recieve = $goalHigh = $goalLow = $defense = $killed = $notes = $tags =  False;
@@ -34,6 +36,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
 	$won = isset($_POST["won"]);
 	$notes = isset($_POST["notes"]);
 	$tags = isset($_POST["tags"]);
+	
+	$comp = $_POST["comp"];
 	
 	//stores the boolean values from the form responses
 	$cols=array($auton,$barToss,$barCatch,$passes,$recieve,$goalHigh,$goalLow,$defense,$fouls,$tech_fouls,$won,$notes,$tags);
@@ -55,7 +59,7 @@ if(!strcmp($_POST["hashtag"],"")==0){
 	str_replace(",#","#",$str);
 	$tags=explode("#",$str);
 }
-$result=mysqli_query($con,"SELECT * FROM match_data");
+$result=mysqli_query($con,"SELECT * FROM match_data WHERE `competition`='".$comp."'");
 
 //Here we get ready to print out a table
 $print="<table class='display'><tr> <th>match</th> <th>team</th>";
